@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="secoursEJB" transaction-type="JTA">
+    	<provider>org.hibernate.ejb.HibernatePersistence</provider>
+    	<jta-data-source>java:jboss/datasources/deltasecoursDS</jta-data-source>
+		
+	 	
+	 	<class>com.iset.secoursEJB.entities.Agence</class>
+		<class>com.iset.secoursEJB.entities.Caisse</class>
+		<class>com.iset.secoursEJB.entities.Client</class>
+		<class>com.iset.secoursEJB.entities.Compte</class>
+		<class>com.iset.secoursEJB.entities.Operation</class>
+		<class>com.iset.secoursEJB.entities.Virement</class>
+		<class>com.iset.secoursEJB.entities.Versement</class>
+		<class>com.iset.secoursEJB.entities.Retrait</class>
+		<class>com.iset.secoursEJB.entities.RemiseCheque</class>
+		<class>com.iset.secoursEJB.entities.RemiseEffet</class>
+		<class>com.iset.secoursEJB.entities.Utilisateur</class>
+		
+		<properties>
+			<!-- indique a hibernate de update la base au lancement de lapplication  -->
+			<property name="hibernate.hbm2ddl.auto" value="update"/>
+	 	</properties>
+	</persistence-unit>
+</persistence>

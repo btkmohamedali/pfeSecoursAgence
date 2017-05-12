@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+ 	<h:head>
+        <title>Authentification</title>
+    </h:head>
+	<h:body > 
+			<p:growl id="growl" sticky="true" showDetail="true" />
+	<div style="margin-top: 130px;">
+		<center>  
+			<p:graphicImage name="btklogo.png" library="img"   />
+			
+		</center>
+		<h:form>
+			<div style="margin : 0 auto;width:100%;text-align: center;margin-left:400px;">
+			<p:fieldset legend="Login" style="width:50px">
+			<center>
+			<p:panelGrid columns ="2"  style="margin-top:20px;width:500px">
+				
+					<p:outputLabel  value ="Login" ></p:outputLabel>
+					<p:inputText  id="inputlogin" value="#{authentificationBean.user.login}" style="width:350px;text-align: center;"/>
+					
+					<p:outputLabel value="Password"  />
+					<p:password id="inputPassword" value="#{authentificationBean.user.password}" style="width:350px;text-align: center;" />
+				
+			</p:panelGrid>	
+			
+				
+					<p:commandButton id="login" value="Valider"  icon="ui-icon-check" action="#{authentificationBean.envoie()}" style="margin-top:10px;"/>
+			</center>
+			</p:fieldset>
+			</div>
+			
+			
+		</h:form>
+		
+		</div>
+	</h:body> 
+</html>

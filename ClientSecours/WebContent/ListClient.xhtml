@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+	<title>Liste client</title>
+</h:head> 
+<h:body>
+<f:view>
+<h:form>
+		    <p:menubar>
+		       
+		        
+		         <p:submenu label="Operation" icon="ui-icon-document">
+		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
+				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
+				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
+				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
+				    </p:submenu>
+				     
+		         	<p:submenu label="Lists" icon="ui-icon-contact">
+		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
+				         
+				    </p:submenu>
+		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
+							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
+							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
+							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
+							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
+							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
+					</p:submenu>
+		          <p:separator />
+		          <p:menuitem value="Quit" url="Authentification.xhtml" />
+		        </p:submenu>
+		 		
+		 		<f:facet name="options">
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
+		        </f:facet>
+		    </p:menubar>
+	  </h:form>
+	  <p:panel>
+	<h1> la liste des clients  </h1>
+	
+	<p:dataTable var="client" id="dataTable" value="#{clientBean.findAll()}" border="2">
+		<p:column>
+			<f:facet name="header">
+			<p:outputLabel value="Code client" />
+			</f:facet>
+				<p:outputLabel  value="#{client.codeClient}"/>
+		</p:column>
+		
+		<p:column>
+			<f:facet name="header">
+			<p:outputLabel value="CIN" />
+			</f:facet>
+				<p:outputLabel  value="#{client.cin}"/>
+		</p:column>
+		
+		
+		
+		<p:column>
+			<f:facet name="header">
+			<p:outputLabel value="Nom client" />
+			</f:facet>
+				<h:outputLabel  value="#{client.nom}"/>
+		</p:column>
+		
+		<p:column>
+			<f:facet name="header">
+			<p:outputLabel value="Prenom client" />
+			</f:facet>
+				<p:outputLabel  value="#{client.prenom}"/>
+		</p:column>
+		
+		
+				
+		<p:column>
+			<f:facet name="header">
+			<p:outputLabel value="agence" />
+			</f:facet>
+				<p:outputLabel  value="#{client.agence.libelle_Agence}"/>
+		</p:column>
+		
+	</p:dataTable>
+	</p:panel>
+	</f:view>
+	
+</h:body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      >
+
+<h:head>
+	<title>Remise Cheque </title>
+		
+	<style>
+		.ui-panelgrid>*>tr, .ui-panelgrid .ui-panelgrid-cell
+		{
+			border: none;
+		}
+</style>
+</h:head> 
+<h:body> 
+	<p:growl id="growl" sticky="true" showDetail="true" autoUpdate="true" closable="true"  />
+	
+	<!-- menu -->
+	<h:form>
+		    <p:menubar>
+		         <p:submenu label="Operation" icon="ui-icon-document">
+		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
+				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
+				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
+				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
+				    </p:submenu>
+				     
+		         	<p:submenu label="Lists" icon="ui-icon-contact">
+		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
+				         
+				    </p:submenu>
+		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
+							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
+							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
+							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
+							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
+							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
+					</p:submenu>
+		          <p:separator />
+		          <p:menuitem value="Quit" url="Authentification.xhtml" />
+		        </p:submenu>
+		 		
+		 		<f:facet name="options">
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
+		        </f:facet>
+		    </p:menubar>
+	  </h:form>
+	<p:panel>
+		<h:form>
+			<center>
+				<h3>Operation Remise Cheque</h3>
+			</center>
+	<center>
+			<table>
+			<tr>
+				<td>
+					<!-- client  --> 
+				
+					<p:panelGrid id="panelClient" columns="2" style="font-size:18px;">
+					<p:fieldset legend="Client 1"  style="width:500px">
+				
+						<p:outputLabel value="CIN " />
+						<p:separator/>
+					
+					<p:panelGrid id="panelClientsComptes" columns="2" cellpadding="10">
+						<p:inputText value="#{clientBean.client.cin}" required="true" requiredMessage="veuillez inserer cin">
+							<pe:keyFilter regEx="/[0-9]/i" />
+						</p:inputText>
+					
+					
+				<p:commandButton value="Valider" action="#{clientBean.findClientByCIN()}"
+					update="listClient,code_Client,panelClient" />
+					
+				<p:outputLabel value="Code" />
+				<p:inputText id="code_Client" value="#{clientBean.codeClient}" readonly="true" />
+				
+					<p:outputLabel value=" Liste des comptes "></p:outputLabel>
+					<p:selectOneMenu id="listClient" value="#{clientBean.numCompte}">
+					<f:selectItem itemLabel="Select..." noSelectionOption="true" />
+					<f:selectItems value="#{clientBean.listeComptes}"
+							var="item" itemLabel="#{item.type_compte}"
+							itemValue="#{item.codeCompte}">
+					</f:selectItems>
+					</p:selectOneMenu>
+					<p:commandButton value="Afficher" action="#{clientBean.searchCompte()}"
+						update="soldeC,CodeC,agenceC,autorisationC" />
+				</p:panelGrid>
+				<p:outputLabel></p:outputLabel>
+				<p:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Num Compte" />
+					<p:inputText id="CodeC" value="#{clientBean.compte.codeCompte}" readonly="true" />
+					<p:outputLabel value=" Solde Compte " />
+					<p:inputText id="soldeC" value="#{clientBean.solde}" readonly="true" />
+					<p:outputLabel value=" Agence " />
+					<p:inputText id="agenceC" value="#{clientBean.compte.agence.libelle_Agence}" readonly="true" />
+					<p:outputLabel value=" Autorisation " />
+					<p:inputText id="autorisationC" value="#{clientBean.compte.autorisation}" readonly="true" />
+				</p:panelGrid>
+				</p:fieldset>
+			</p:panelGrid>
+				
+				</td>
+				<td>
+				
+				<!-- beneficiaire --> 
+				<p:panelGrid id="panelbeneficiaire" columns="2" style="font-size:18px;"
+					rendered="#{clientBean.radioValue=='btk'}">
+					<p:fieldset legend="Client 2"  style="width:500px">
+				
+					<p:outputLabel value="CIN " />
+					<p:separator/>
+				<p:panelGrid id="panelbeneficiaireComptes" columns="2" cellpadding="10">
+				
+					<p:inputText value="#{clientBean.clientBeneficiaire.cin}" required="true" requiredMessage="veuillez inserer cin">
+						<pe:keyFilter regEx="/[0-9]/i" />
+					</p:inputText>
+				
+				
+				<p:commandButton value="Valider" action="#{clientBean.findBeneficiaireByCIN()}"
+					update="listbeneficiaire,code_Beneficiaire,panelbeneficiaire" />
+					
+				
+					<p:outputLabel value="Code" />
+					<p:inputText id="code_Beneficiaire" value="#{clientBean.codeBeneficiaire}" readonly="true" />
+					<p:outputLabel value=" Liste des comptes "></p:outputLabel>
+					<p:selectOneMenu id="listbeneficiaire" value="#{clientBean.numCompteBeneficiaire}">
+					<f:selectItem itemLabel="Select..." noSelectionOption="true" />
+					<f:selectItems value="#{clientBean.listeComptesBeneficiaire}"
+							var="item" itemLabel="#{item.type_compte}"
+							itemValue="#{item.codeCompte}">
+					</f:selectItems>
+					</p:selectOneMenu>
+					<p:commandButton value="Afficher" action="#{clientBean.searchCompteBeneficiaire()}"
+						update="soldeB,CodeB,agenceB,autorisationB" />
+				</p:panelGrid>
+				<p:outputLabel></p:outputLabel>
+				<p:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Num Compte" />
+					<p:inputText id="CodeB" value="#{clientBean.compteBeneficiaire.codeCompte}" readonly="true" />
+					<p:outputLabel value=" Solde Compte " />
+					<p:inputText id="soldeB" value="#{clientBean.soldeBeneficiaire}" readonly="true" />
+					<p:outputLabel value=" Agence " />
+					<p:inputText id="agenceB" value="#{clientBean.compteBeneficiaire.agence.libelle_Agence}" readonly="true" />
+					<p:outputLabel value=" Autorisation " />
+					<p:inputText id="autorisationB" value="#{clientBean.compteBeneficiaire.autorisation}" readonly="true" />
+				</p:panelGrid>
+			</p:fieldset>
+			</p:panelGrid>
+			
+			</td>
+			</tr>
+			</table>
+
+
+
+ 	
+	 <p:panelGrid  id="panelS" columns="2" style ="position:center;font-size:18px" >
+			
+			 <p:outputLabel   value="Numero Effet" />
+			 <p:inputText  value="#{clientBean.numEffet}" required="true"  requiredMessage="le numero effet doit etre contenir 14 chiffres"/>
+			 
+				 
+			 <p:outputLabel  value=" Montant"/>
+			 <p:inputText  value="#{clientBean.montantVR}"  required="true" requiredMessage="veuillez inserer le montant">
+			 <pe:keyFilter regEx="/[0-9]/i"/> 
+			 </p:inputText>
+			 
+			 <p:outputLabel   value="Motif" />
+			 <p:inputTextarea  value="#{clientBean.motif}" />
+			 
+			<p:outputLabel value=" Choisir Client:"/>
+			
+				
+				<p:selectOneRadio id="console" value="#{clientBean.radioValue}" onclick="this.form.submit()">
+		            <f:selectItem itemLabel="Autre Banque" itemValue="autre_banque" />
+		         	<f:selectItem itemLabel="btk" itemValue="btk" />
+		        </p:selectOneRadio>
+			</p:panelGrid>	
+			<p:panelGrid columns="2" rendered="#{clientBean.radioValue=='autre_banque'}">
+				<p:outputLabel value="RIB Beneficiaire" />
+				<p:inputText  value="#{clientBean.rib_Beneficiaire}" >
+					<pe:keyFilter regEx="/[0-9]/i"/>
+				</p:inputText>
+			</p:panelGrid>
+			
+	
+			
+			<center>
+				<p:commandButton value="Ajouter" action="#{clientBean.RemiseEffet()}" update="soldeC,soldeB" icon="ui-icon-check" />		    	
+		    	<p:commandButton value="Exit" icon="ui-icon-close" update="growl" action="#{authentificationBean.RetourMenu()}" />
+			</center>
+		</center>
+			
+	</h:form>
+	</p:panel>
+</h:body> 
+</html>
+

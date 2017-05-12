@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+	<title>Liste versement</title>
+</h:head> 
+<h:body>
+<f:view>
+<h:form>
+		    <p:menubar>
+		       
+		     <p:submenu label="Operation" icon="ui-icon-document">
+		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
+				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
+				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
+				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
+				    </p:submenu>
+				     
+		         	<p:submenu label="Lists" icon="ui-icon-contact">
+		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
+				         
+				    </p:submenu>
+		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
+							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
+							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
+							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
+							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
+							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
+					</p:submenu>
+		          <p:separator />
+		          <p:menuitem value="Quit" url="Authentification.xhtml" />
+		        </p:submenu>
+		 		
+		 		<f:facet name="options">
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
+		        </f:facet>
+		    </p:menubar>
+	  </h:form>
+	  <p:panel id="title">
+	  	  		<h1> la liste de  versement </h1>
+	  
+	
+	
+	<p:dataTable var="versement" id="dataTable" value="#{clientBean.findAllVersement()}" border="2">
+		
+		<p:column style="width:60px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Client" />
+				</f:facet>
+					<h:outputLabel  value="#{versement.client.codeClient}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:80px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="code Compte" />
+				</f:facet>
+					<h:outputLabel  value="#{versement.compte.codeCompte}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:200px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Date" />
+				</f:facet>
+					<h:outputLabel  value="#{versement.date}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:60px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Montant" />
+				</f:facet>
+					<h:outputLabel  value="#{versement.montant}"/>
+			</center>
+		</p:column>
+		
+		
+		
+		<p:column style="width:80px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="utilisateur" />
+				</f:facet>
+					<h:outputLabel  value="#{versement.utilisateur.login}"/>
+			</center>
+		</p:column>
+		
+		
+		<p:column>
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Motif" />
+				</f:facet>
+					<h:outputLabel  value="#{versement.motif}"/>
+			</center>
+		</p:column>
+	</p:dataTable>
+	</p:panel>
+	<center>
+		<p:commandButton value="Print" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+    		<p:printer target="title" />
+		</p:commandButton>
+	</center>
+	</f:view>
+	
+</h:body>
+</html>

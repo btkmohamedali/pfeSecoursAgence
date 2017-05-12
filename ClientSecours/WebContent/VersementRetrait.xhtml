@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"> 
+
+<h:head>
+	<title>Versement /Retrait</title>
+	<style>
+		.ui-panelgrid>*>tr, .ui-panelgrid .ui-panelgrid-cell
+		{
+			border: none;
+		}
+	</style>
+</h:head>
+ 
+<h:body>
+
+		<p:growl id="growl"  showDetail="true" autoUpdate="true" closable="true"/>
+	
+	  <h:form>
+		    <p:menubar>
+		       
+		         <p:submenu label="Operation" icon="ui-icon-document">
+		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
+				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
+				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
+				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
+				    </p:submenu>
+				     
+		         	<p:submenu label="Lists" icon="ui-icon-contact">
+		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
+				         
+				    </p:submenu>
+		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
+							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
+							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
+							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
+							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
+							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
+					</p:submenu>
+		          	<p:submenu>
+							<p:menuitem id="c" value="ActiverServiceSecours.xhtml" rendered="#{clientBean.loginFromSession=='feriel'}"/>
+           			 </p:submenu>
+		          <p:separator />
+		        	<c:if test="#{clientBean.loginFromSession=='feriel'}">
+						<li><a href="ActiverServiceSecours.xhtml">Synchronisation</a></li>
+           			 </c:if>
+		        </p:submenu>
+		 		
+		 		<f:facet name="options">
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		          <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
+		        </f:facet>
+		    </p:menubar>
+	  </h:form>
+	
+	  <p:panel >
+	  		<h:form>
+			<center>
+				<h3> Versement /Retrait</h3>
+			</center>
+     <center>
+			<table>
+			<tr>
+				<td>
+					<!-- client  --> 
+    	
+					<p:panelGrid id="panelClient" columns="2" style="font-size:18px;">
+					<p:fieldset legend="Client 1"  style="width:500px">
+				
+						<p:outputLabel value="CIN " />
+						<p:separator/>
+					
+					<p:panelGrid id="panelClientsComptes" columns="2" cellpadding="10">
+						<p:inputText value="#{clientBean.client.cin}" required="true" requiredMessage="veuillez inserer cin">
+							<pe:keyFilter regEx="/[0-9]/i" />
+						</p:inputText>
+					
+					
+				<p:commandButton value="Valider" action="#{clientBean.findClientByCIN()}"
+					update="listClient,code_Client,panelClient" />
+					
+				<p:outputLabel value="Code" />
+				<p:inputText id="code_Client" value="#{clientBean.codeClient}" readonly="true" />
+				
+					<p:outputLabel value=" Liste des comptes "></p:outputLabel>
+					<p:selectOneMenu id="listClient" value="#{clientBean.numCompte}">
+					<f:selectItem itemLabel="Select..." noSelectionOption="true" />
+					<f:selectItems value="#{clientBean.listeComptes}"
+							var="item" itemLabel="#{item.type_compte}"
+							itemValue="#{item.codeCompte}">
+					</f:selectItems>
+					</p:selectOneMenu>
+					<p:commandButton value="Afficher" action="#{clientBean.searchCompte()}"
+						update="soldeC,CodeC,agenceC,autorisationC" />
+				</p:panelGrid>
+				<p:outputLabel></p:outputLabel>
+		
+			<p:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Num Compte" />
+					<p:inputText id="CodeC" value="#{clientBean.compte.codeCompte}" readonly="true" />
+					<p:outputLabel value=" Solde Compte " />
+					<p:inputText id="soldeC" value="#{clientBean.solde}" readonly="true" />
+					<p:outputLabel value=" Agence " />
+					<p:inputText id="agenceC" value="#{clientBean.compte.agence.libelle_Agence}" readonly="true" />
+					<p:outputLabel value=" Autorisation " />
+					<p:inputText id="autorisationC" value="#{clientBean.compte.autorisation}" readonly="true" />
+				
+				
+				<p:outputLabel  value="choisir operation" />
+	    		<p:selectOneMenu id="listOperation" value="#{clientBean.type_operation}" rows="3"  >
+	    			
+	    			 	<f:selectItem itemLabel="Select..."  noSelectionOption="true"/>
+		    			
+		    			<f:selectItem itemLabel="Retrait" itemValue="Retrait"/>
+						<f:selectItem itemLabel="Versement" itemValue="Versement"/>
+						
+						
+				</p:selectOneMenu>
+		 	
+	   		 <p:outputLabel value=" Montant"/>
+			 <p:inputText  value="#{clientBean.montantVR}"  required="true" requiredMessage="veuillez inserer le montant">
+			 <pe:keyFilter regEx="/[0-9]/i"/> 
+			 </p:inputText>
+			
+			 <p:outputLabel  for="numcheque" value="Motif" />
+			 <p:inputTextarea id="numcheque"  value="#{clientBean.motif}" />
+				 
+			</p:panelGrid>
+				</p:fieldset>
+			</p:panelGrid>
+				
+				</td>
+				</tr></table>
+				
+			 </center>
+			
+    			
+
+ 
+    	 
+		<center>
+			<p:commandButton  value="Valid" action="#{clientBean.operationChoisi()}"  update="soldeC" icon="ui-icon-check"></p:commandButton>
+			<p:commandButton value="Exit" icon="ui-icon-close" update="growl" action="#{authentificationBean.RetourMenu()}" />
+
+		</center>	
+			
+			
+ 	</h:form>
+ 	
+ 	</p:panel>
+
+</h:body> 
+</html>

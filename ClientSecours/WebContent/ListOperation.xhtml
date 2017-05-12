@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+	<title>Liste operation</title>
+</h:head> 
+<h:body>
+<f:view>
+<h:form>
+		    <p:menubar>
+		       
+		        
+		        <p:submenu label="Operation" icon="ui-icon-document">
+		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
+				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="ListRemiseCheque.xhtml" />
+				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
+				    </p:submenu>
+				     
+		         	<p:submenu label="Lists" icon="ui-icon-contact">
+		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="List Client" url="ListeClient.xhtml" />
+				          <p:menuitem id="List_Operation" value="List Operation" url="ListOperation.xhtml" />
+
+				    </p:submenu>
+		          
+		          <p:separator />
+		          <p:menuitem value="Quit" url="Authentification.xhtml" />
+		        </p:submenu>
+		 		
+		 		<f:facet name="options">
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
+		        </f:facet>
+		    </p:menubar>
+	  </h:form>
+	  <p:panel>
+	  	  		<h1> la liste du operation  </h1>
+	  
+	
+	
+	<p:dataTable var="operation" id="dataTable" value="#{operationBean.findAll()}" border="2">
+		
+		<p:column style="width:60px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Client" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.codeOperation}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:190px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="code Compte" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.compte.codeCompte}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:100px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Date" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.date}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:60px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Montant" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.montant}"/>
+			</center>
+		</p:column>
+		
+		
+		<p:column style="width:60px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="code client" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.client.codeClient}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:90px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="code Compte client" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.compte.codeCompte}"/>
+			</center>
+		</p:column>
+		
+		<p:column style="width:80px">
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="utilisateur" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.utilisateur.login}"/>
+			</center>
+		</p:column>
+		
+		
+		<p:column>
+			<center>
+				<f:facet name="header">
+				<p:outputLabel value="Motif" />
+				</f:facet>
+					<h:outputLabel  value="#{operation.motif}"/>
+			</center>
+		</p:column>
+	</p:dataTable>
+	</p:panel>
+	</f:view>
+	
+</h:body>
+</html>
