@@ -1,5 +1,6 @@
 package com.iset.Methodes;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,22 +16,37 @@ public class DeltaOracle {
 	{
 		try
 		{
-			System.out.println("afficher");
+			
 			String sqlexistance="select * from BKAGE";
-			String delete="DELETE FROM BKAGE";
-			Statement stmysql=mysql.Connexion().createStatement();
-		    PreparedStatement statement = mysql.prepareStatement(sql);
+			String requetedelete="DELETE FROM agence";
+			String requeteinsert="INSERT INTO agence (codeAgence,libelle_Agence) VALUES (?, ?)";
+			//suppression de la table agence
+		    PreparedStatement statement = mysql.Connexion().prepareStatement(requetedelete);
+		    int rowsDeleted = statement.executeUpdate();
+		    if (rowsDeleted > 0) 
+		    {
+		        System.out.println(" deleted successfully!");
+		    }
 			/* Création de l'objet gérant les requêtes */
 			Statement storacle=oracle.Connexion().createStatement();
 			/* Exécution d'une requête de lecture */
 		    ResultSet rscount=storacle.executeQuery(sqlexistance);
 		    while(rscount.next())
 		    {
+		    	PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
 		    	
-		    	System.out.println(rscount.getString("AGE"));
-		    	System.out.println(rscount.getString("LIB"));
+		    	stinsert.setString(1, rscount.getString("AGE"));
+		    	stinsert.setString(2, rscount.getString("LIB"));
+		    	int rowsAdded =stinsert.executeUpdate();
+		    	if (rowsAdded > 0) 
+			    {
+			        System.out.println(" added successfully!");
+			    }
+		    	//System.out.println(rscount.getString("AGE"));
+		    	//System.out.println(rscount.getString("LIB"));
 		    	
 		    }
+		    
 		}
 	    catch(SQLException ex)
 	    {
@@ -38,23 +54,47 @@ public class DeltaOracle {
 	    }
 	}
 
-	public void afficherCaisse()
+	public void synchroniserCaisse()
 	{
 		try
 		{
-			System.out.println("afficher caisse");
-			String sqlexistance="select * from BKCAI";
 			
-		    
+			String sqlexistance="select * from BKCAI";
+			String requetedelete="DELETE FROM caisse";
+			String requeteinsert="INSERT INTO caisse (codecaisse,soldeCaisse,code_agenceFK,code_utilisateurFK) VALUES (?,?,?,?)";
+			//suppression de la table agence
+		    PreparedStatement statementcaisse = mysql.Connexion().prepareStatement(requetedelete);
+		    int rowsDeleted = statementcaisse.executeUpdate();
+		    if (rowsDeleted > 0) 
+		    {
+		        System.out.println(" deleted successfully!");
+		    } 
+		    String sqlagence="select * from BKAGE";
+		    ResultSet rsagence= oracle.Connexion().createStatement().executeQuery(sqlagence);
 		    Statement storacle=oracle.Connexion().createStatement();
 		    ResultSet rscount=storacle.executeQuery(sqlexistance);
 		    while(rscount.next())
 		    {
-		    	System.out.println("\n agence= "+rscount.getString("AGE"));
+		    	PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
+		    	
+		    	stinsert.setString(1, rscount.getString("CAI"));
+		    	
+		    	stinsert.setString(2, rscount.getString("SJO"));
+		    	while(rsagence.next())
+			    {
+		    	stinsert.setString(3, rsagence.getString("AGE"));
+			    }
+		    	stinsert.setString(4, rscount.getString("CUTI"));
+		    	int rowsAdded =stinsert.executeUpdate();
+		    	if (rowsAdded > 0) 
+			    {
+			        System.out.println(" added successfully!");
+			    }
+		    	/*System.out.println("\n agence= "+rscount.getString("AGE"));
 		    	System.out.println("code caisse= "+rscount.getString("CAI"));
 		    	System.out.println("code utilisateur= "+rscount.getString("CUTI"));
 		    	System.out.println("date= "+rscount.getString("DOU"));
-		    	System.out.println("solde= "+rscount.getString("SJO"));
+		    	System.out.println("solde= "+rscount.getString("SJO"));*/
 		    }
 		}
 	    catch(SQLException ex)

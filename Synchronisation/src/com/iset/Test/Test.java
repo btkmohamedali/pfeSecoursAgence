@@ -7,7 +7,7 @@ public class Test {
 	public static void main(String[] args) {
 		DeltaOracle oracle=new DeltaOracle();
 		
-		oracle.afficherClient();
+		oracle.synchroniserCaisse();
 		//oracle.afficherCaisse();
 		//oracle.afficherEvuti();
 		

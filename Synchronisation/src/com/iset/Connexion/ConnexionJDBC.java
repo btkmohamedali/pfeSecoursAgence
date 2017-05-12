@@ -9,7 +9,7 @@ public class ConnexionJDBC {
 	public java.sql.Connection Connexion()
 	 {     
 		 System.out.println("-------- Mysql Connection Testing ------");  
-		String url = "jdbc:mysql://localhost:3306/deltasecours";
+		String url = "jdbc:mysql://localhost:3306/deltasecours?autoReconnect=true&useSSL=false";
 		 String user = "root";
 		  String password = "root";
 		  try 
