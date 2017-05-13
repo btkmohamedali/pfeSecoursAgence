@@ -225,8 +225,8 @@ public class ClientBean implements Serializable {
 	{
 		try 
 		{
-			System.out.println("cinClient="+client.getCin());
-			if((client.getCin()==0))
+			System.out.println("cinClient="+client.getNID());
+			if((client.getNID()==0))
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "inserer un numero de cin");
 				RequestContext.getCurrentInstance().update("growl");
@@ -237,8 +237,8 @@ public class ClientBean implements Serializable {
 			{
 				if(client!=null)
 				{
-					client=daoclient.findClient(client.getCin());
-					System.out.println("cin client ="+client.getCin());
+					client=daoclient.findClient(client.getNID());
+					System.out.println("cin client ="+client.getNID());
 					listeComptes=this.ListCompteClientByCIN();
 					System.out.println("client trouver par cin");
 				}
@@ -258,7 +258,7 @@ public class ClientBean implements Serializable {
 	{
 		try 
 		{
-			if(client.getCin()==clientBeneficiaire.getCin())
+			if(client.getNID()==clientBeneficiaire.getNID())
 			{
 				
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Cin identique  ");
@@ -267,7 +267,7 @@ public class ClientBean implements Serializable {
 				context.addMessage(null, message);
 			}
 			else
-			if(clientBeneficiaire.getCin()==0 )
+			if(clientBeneficiaire.getNID()==0 )
 				{	
 					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "inserer un cin correct");
 					RequestContext.getCurrentInstance().update("growl");
@@ -277,8 +277,8 @@ public class ClientBean implements Serializable {
 			else
 			if(clientBeneficiaire!=null)
 			{
-				clientBeneficiaire=daoclient.findClient(clientBeneficiaire.getCin());
-				System.out.println("cin Beneficiaire ="+clientBeneficiaire.getCin());
+				clientBeneficiaire=daoclient.findClient(clientBeneficiaire.getNID());
+				System.out.println("cin Beneficiaire ="+clientBeneficiaire.getNID());
 				listeComptesBeneficiaire=this.ListCompteBeneficiaireByCIN();
 				System.out.println("Beneficiaire trouver par cin");
 			}
@@ -325,8 +325,8 @@ public class ClientBean implements Serializable {
 	//chercher compte par code 
 	public void searchCompte( )
 	{
-		System.out.println(client.getCin());
-		if(client.getCin()==0)
+		System.out.println(client.getNID());
+		if(client.getNID()==0)
 		{
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,"Warning", "insert cin avant d'afficher le compte");
 			RequestContext.getCurrentInstance().update("growl");
@@ -352,7 +352,7 @@ public class ClientBean implements Serializable {
 	
 	//chercher compte beneficiaire
 	public void searchCompteBeneficiaire( ){
-		if(clientBeneficiaire.getCin()==0)
+		if(clientBeneficiaire.getNID()==0)
 		{
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,"Warning", "insert cin avant");
 			RequestContext.getCurrentInstance().update("growl");
@@ -378,13 +378,13 @@ public class ClientBean implements Serializable {
 	
 	public List<Compte> ListCompteClientByCIN()
 	{
-		 return listeComptes=daocompte.findListCompteByCINClient(client.getCin());
+		 return listeComptes=daocompte.findListCompteByCINClient(client.getNID());
 	}
 	
 	//liste des comptes du beneficiaire( client btk)
 	public List<Compte> ListCompteBeneficiaireByCIN ()
 	{
-		return listeComptesBeneficiaire=daocompte.findListCompteByCINClient(clientBeneficiaire.getCin());
+		return listeComptesBeneficiaire=daocompte.findListCompteByCINClient(clientBeneficiaire.getNID());
 	}
 	
 	public List<Compte> getListeComptes() {
@@ -907,7 +907,7 @@ public class ClientBean implements Serializable {
 		if(radioValue.equals("btk"))
 		{
 			System.out.println("compte client");
-			if(clientBeneficiaire.getCin()==0)
+			if(clientBeneficiaire.getNID()==0)
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "veuillez inserer le cin avant");
 				RequestContext.getCurrentInstance().update("growl");
@@ -1151,7 +1151,7 @@ public class ClientBean implements Serializable {
 		if(radioValue.equals("btk"))
 		{
 			System.out.println("compte client");
-			if(clientBeneficiaire.getCin()==0)
+			if(clientBeneficiaire.getNID()==0)
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "veuillez inserer le cin avant");
 				RequestContext.getCurrentInstance().update("growl");
@@ -1369,7 +1369,7 @@ public class ClientBean implements Serializable {
 				if(radioValue.equals("btk"))
 				{
 					System.out.println("compte client");
-					if(clientBeneficiaire.getCin()==0)
+					if(clientBeneficiaire.getNID()==0)
 					{
 						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "veuillez inserer le cin avant");
 						RequestContext.getCurrentInstance().update("growl");
@@ -1480,9 +1480,9 @@ public class ClientBean implements Serializable {
 		
 		
 		
-		System.out.println("cin avant "+client.getCin());
-		client.setCin(0);
-		System.out.println("cin apres"+client.getCin());
+		System.out.println("cin avant "+client.getNID());
+		client.setNID(0);
+		System.out.println("cin apres"+client.getNID());
 		client.setNom(null);
 		client.setCodeClient(0);
 		setNumCompte(0);

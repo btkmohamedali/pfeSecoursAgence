@@ -1,6 +1,7 @@
 package com.iset.ClientSecours.managedbean;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -54,6 +55,10 @@ public class AuthentificationBean implements Serializable{
 		 System.exit(0);
 	}
 		
+	public List<Utilisateur> findAll()
+	{
+		return daologin.findAllUsers();
+	}
 	public void sortir() throws IOException
 	{
 		FacesContext.getCurrentInstance().getExternalContext().redirect("Authentification.xhtml");

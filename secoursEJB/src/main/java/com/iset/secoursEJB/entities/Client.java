@@ -22,7 +22,9 @@ private static final long serialVersionUID = 1L;
 	private int codeClient;
 	
 	@NotNull
-	private int cin;
+	private int TID;
+	@NotNull
+	private int NID;
 	@NotNull
 	private String nom;
 	@NotNull
@@ -47,12 +49,18 @@ private static final long serialVersionUID = 1L;
 		this.codeClient = codeClient;
 	}
 	
-	public int getCin() {
-		return cin;
-	}
 	
-	public void setCin(int cin) {
-		this.cin = cin;
+	public int getTID() {
+		return TID;
+	}
+	public void setTID(int tID) {
+		TID = tID;
+	}
+	public int getNID() {
+		return NID;
+	}
+	public void setNID(int nID) {
+		NID = nID;
 	}
 	public String getNom() {
 		return nom;

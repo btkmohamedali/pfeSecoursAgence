@@ -16,8 +16,7 @@ public class Caisse implements Serializable {
 	private int codecaisse;
 	@NotNull
 	private double soldeCaisse ;
-	@NotNull
-	private Date datemodification;
+	
 	
 	//relation caisse agence 
 	private Agence agence;
@@ -72,14 +71,6 @@ public class Caisse implements Serializable {
 		this.soldeCaisse = soldeCaisse;
 	}
 	
-	public Date getDatemodification() {
-		return datemodification;
-	}
 
-
-
-	public void setDatemodification(Date datemodification) {
-		this.datemodification = datemodification;
-	}
    
 }

@@ -24,7 +24,7 @@ public class Utilisateur implements Serializable {
 	
 	@NotNull
 	private int cin;
-	@NotNull
+
 	private String mail;
 	
 	
