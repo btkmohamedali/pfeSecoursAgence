@@ -8,6 +8,6 @@ public interface VirementImpl {
 
 	boolean insertVirement(Virement virement);
 	List<Virement> findAll();
-	int countNbrVirement();
+	long countNbrVirement();
 
 }

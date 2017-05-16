@@ -62,23 +62,23 @@ public class OperationBean implements Serializable{
 		return x;
 	}
 	
-	public int countVirement()
+	public long countVirement()
 	{
-		int x=daovirement.countNbrVirement();
+		long x=daovirement.countNbrVirement();
 		System.out.println(x);
 		return x;
 	}
 	
-	public int countRemiseC()
+	public long countRemiseC()
 	{
-		int x=daoremiseC.countNbrRemiseC();
+		long x=daoremiseC.countNbrRemiseC();
 		System.out.println(x);
 		return x;
 	}
 	
-	public int countRemiseE()
+	public long countRemiseE()
 	{
-		int x=daoremiseE.countNbrRemiseE();
+		long x=daoremiseE.countNbrRemiseE();
 		System.out.println(x);
 		return x;
 	}

@@ -68,17 +68,6 @@ public class ClientBean implements Serializable {
 	@EJB
 	private UtilisateurImpl daologin;
 	
-
-	public Agence getAgence() {
-		return agence;
-	}
-
-	public void setAgence(Agence agence) {
-		this.agence = agence;
-	}
-
-
-
 	private Agence agence=new Agence();
 	private Client client=new Client();
 	private Client clientBeneficiaire=new Client();
@@ -108,7 +97,15 @@ public class ClientBean implements Serializable {
 	public Date date=new  Date();
 	String loginFromSession = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("login");
 
-	
+
+	public Agence getAgence() {
+		return agence;
+	}
+
+	public void setAgence(Agence agence) {
+		this.agence = agence;
+	}
+
 	public String getLoginFromSession() {
 		return loginFromSession;
 	}
@@ -591,18 +588,23 @@ public class ClientBean implements Serializable {
 		
 	}
 	
-	double montantcaisse;
+	double montantcaisse=0;
 	
 	
 	public void operationChoisi()
 	{
 		System.out.println("numero caisse" +numCaisse);
 		System.out.println("login user"+loginFromSession);
-		Caisse caisse=daocaisse.findCaisseByLoginAndNumC(loginFromSession, numCaisse);
+		Caisse caisse=daocaisse.findCaisseByLoginCode(loginFromSession,numCaisse);
+		System.out.println("******** donnees caisse********");
+		System.out.println("numero caisse"+caisse.getNumerocaisse());
+		System.out.println("solde caisse"+caisse.getSoldeCaisse());
+		System.out.println("code user"+caisse.getUtilisateur().getLogin());
+		System.out.println("**********************************");
 		System.out.println("retrait/versement");
 		System.out.println("typeop="+type_operation);
 		double montant=0;
-		if((type_operation==null)&&(montantVR==0)&& (numCaisse==0))
+		if((type_operation==null)&&(montantVR==0))
 		{
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Warning", "veuillez inserer le montant et choisir une operation");
 			RequestContext.getCurrentInstance().update("growl");
@@ -625,14 +627,7 @@ public class ClientBean implements Serializable {
 			FacesContext context=FacesContext.getCurrentInstance();
 			context.addMessage(null, message);
 		}
-		else
-		if(numCaisse==0)
-		{
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,"Warning", "inserer numero de caisse appropriée");
-			RequestContext.getCurrentInstance().update("growl");
-			FacesContext context=FacesContext.getCurrentInstance();
-			context.addMessage(null, message);
-		}
+		
 		else
 		{
 		if(type_operation.equals("Versement"))
@@ -648,11 +643,11 @@ public class ClientBean implements Serializable {
 				System.out.println(" montant versé="+compte.getSolde()+"+"+montantVR+"="+montant);
 				setSolde(montant);
 				System.out.println("solde updated="+getSolde());
-				System.out.println("solde de caisse="+caisse.getSoldeCaisse());
-				
+				System.out.println("solde de caisse before ="+caisse.getSoldeCaisse());
+				System.out.println("numero caisse"+numCaisse);
 				montantcaisse=daocaisse.versementCaisse(numCaisse,loginFromSession,caisse.getSoldeCaisse(),montantVR);
 				
-				System.out.println("solde caisse="+caisse.getSoldeCaisse());
+				System.out.println("solde caisse after="+caisse.getSoldeCaisse());
 				System.out.println("equation ="+caisse.getSoldeCaisse()+"+"+montantVR+"="+montantcaisse);
 				caisse.setSoldeCaisse(montantcaisse);
 				daocaisse.updateCaisse(caisse);
@@ -677,10 +672,11 @@ public class ClientBean implements Serializable {
 			}
 			else 
 			{
+				System.out.println("solde caisse avec if ="+caisse.getSoldeCaisse());
 				
 				if(caisse.getSoldeCaisse()< montantVR)
 				{
-					System.out.println("soldecaisse="+caisse.getSoldeCaisse());
+					System.out.println("solde caisse="+caisse.getSoldeCaisse());
 					System.out.println("montant a retirer"+montantVR);
 					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "erreur", "impossible de retirer a partir de la caisse");
 					RequestContext.getCurrentInstance().update("growl");
@@ -698,13 +694,15 @@ public class ClientBean implements Serializable {
 					setSolde(montant);
 					System.out.println("solde updated="+getSolde());
 
-					System.out.println("solde de caisse="+caisse.getSoldeCaisse());
+					System.out.println("solde de caisse before ="+caisse.getSoldeCaisse());
+					System.out.println("numero caisse"+numCaisse);
 					
 					montantcaisse=daocaisse.retraitCaisse(numCaisse,loginFromSession,caisse.getSoldeCaisse(),montantVR);
 					
-					System.out.println("solde caisse="+caisse.getSoldeCaisse());
+					System.out.println("solde caisse after ="+montantcaisse);
 					System.out.println("equation ="+caisse.getSoldeCaisse()+"-"+montantVR+"="+montantcaisse);
 					caisse.setSoldeCaisse(montantcaisse);
+					System.out.println("numero caisse "+caisse.getNumerocaisse());
 					daocaisse.updateCaisse(caisse);
 					addRetrait();
 					this.insertRetrait();

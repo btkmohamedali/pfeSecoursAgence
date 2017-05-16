@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.iset.secoursEJB.interfaces.UtilisateurImpl;
+import com.iset.secoursEJB.entities.Compte;
 import com.iset.secoursEJB.entities.Utilisateur;
 
 
@@ -154,9 +155,7 @@ public class UtilisateurDAO implements UtilisateurImpl,Serializable{
 	@Override
 	public boolean ajouterUtilisateur(Utilisateur u) {
 		try {
-		     
-			 
-			  getEntityManager().persist(u);
+		     getEntityManager().persist(u);
 			  return true;
 			
 		} catch (Exception e) {
@@ -164,4 +163,6 @@ public class UtilisateurDAO implements UtilisateurImpl,Serializable{
 			return false;
 		}
 	}
+	
+	
 }

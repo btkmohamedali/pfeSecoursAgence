@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.iset.secoursEJB.entities.Caisse;
@@ -26,6 +28,8 @@ public class Utilisateur implements Serializable {
 	private int cin;
 
 	private String mail;
+	
+	private Agence agence ;
 	
 	
 
@@ -97,6 +101,16 @@ public class Utilisateur implements Serializable {
 
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+
+	@OneToOne()
+	@JoinColumn(name="code_agenceFK")
+	public Agence getAgence() {
+		return agence;
+	}
+
+	public void setAgence(Agence agence) {
+		this.agence = agence;
 	}
 		
 	

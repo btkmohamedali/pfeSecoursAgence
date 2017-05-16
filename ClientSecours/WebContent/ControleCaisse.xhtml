@@ -49,40 +49,21 @@
 		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
 		        </f:facet>
 		    </p:menubar>
-	  </h:form>
-	 	<p:panelGrid id="panelOperation" columns="2" style="font-size:18px;">
-	  	<p:outputLabel value="Nombre de retrait"></p:outputLabel>
-	  	<p:outputLabel value="#{operationBean.countRetrait()}"/>
-	  	
-	  	<p:outputLabel value="Nombre de versement"></p:outputLabel>
-	  	<p:outputLabel value="#{operationBean.countVersement()}"/>
-	  	
-	  	<p:outputLabel value="Nombre de remise cheque"></p:outputLabel>
-	  	<p:outputLabel value="#{operationBean.countRemiseC()}"/>
-	  	
-	  	<p:outputLabel value="Nombre de remise effet"></p:outputLabel>
-	  	<p:outputLabel value="#{operationBean.countRemiseE()}"/>
-	  	
-	  	<p:outputLabel value="Nombre de virement"></p:outputLabel>
-	  	<p:outputLabel value="#{operationBean.countVirement()}"/>
-	  </p:panelGrid>
-	  
-	  
-	  
-	  <p:dataTable var="caisse" id="dataTable" value="#{caisseBean.findAll()}" border="2">
-		<p:column>
+		    <p:dataTable var="caisse" id="dataTable" value="#{caisseBean.findAll()}" border="2" style="width:400px">
+		
+		<p:column style="width:10px">
 		<center>
 			<f:facet name="header">
-			<p:outputLabel value="Code Agence" />
+			<p:outputLabel value="numro caisse " />
 			</f:facet>
 				<p:outputLabel  value="#{caisse.numerocaisse}"/>
 		</center>
 		</p:column>
 		
-		<p:column >
-		<center>
+		<p:column style="width:10px;">
+		<center >
 			<f:facet name="header">
-			<p:outputLabel value="Libelle agence" />
+			<p:outputLabel value="solde caisse" />
 			</f:facet>
 				<p:outputLabel  value="#{caisse.soldeCaisse}"/>
 		</center>
@@ -91,5 +72,6 @@
 		
 		
 	</p:dataTable>
+	  </h:form>
 </h:body> 
 </html>

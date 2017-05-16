@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+
 import com.iset.secoursEJB.entities.Utilisateur;
 
 @Stateless
@@ -18,5 +19,6 @@ public interface UtilisateurImpl {
 	public List<String> findAllMDPUsers();
 	public void Mail(String email,List<String> MDPUsers);
 	public boolean ajouterUtilisateur(Utilisateur u);
+	
 	
 }

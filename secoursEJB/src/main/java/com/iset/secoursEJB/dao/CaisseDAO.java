@@ -25,49 +25,30 @@ public class CaisseDAO implements CaisseImpl{
 	}
 
 	@Override
-	public double versementCaisse(int numcaisse,String loginuser,double solde  , double montant) {
+	public double versementCaisse(int numcaisse,String login,double solde  , double montant) {
 		Caisse c=new Caisse();
-		c=findCaisseByLoginAndNumC(loginuser,numcaisse);
-		System.out.println("code caisse="+c.getCodecaisse());
+		c=findCaisseByLoginCode(login,numcaisse);
+		System.out.println("num caisse="+c.getNumerocaisse());
 		System.out.println(montant);
-		return c.getSoldeCaisse()+montant;
+		return c.getSoldeCaisse()+ montant;
 	}
 	@Override
-	public double retraitCaisse(int numcaisse,String loginuser,double solde  , double montant) {
+	public double retraitCaisse(int numcaisse,String login,double solde  , double montant) {
 		Caisse c=new Caisse();
-		c=findCaisseByLoginAndNumC(loginuser,numcaisse);
-		System.out.println("code caisse="+c.getCodecaisse());
+		c=findCaisseByLoginCode(login,numcaisse);
+		System.out.println("num caisse="+c.getNumerocaisse());
 		System.out.println(montant);
 		return c.getSoldeCaisse()- montant ;
 	}
 	@Override
 	public Caisse updateCaisse(Caisse c) {
 		c=getEntityManager().merge(c);
-		System.out.println("Caisse updated");
+		System.out.println("Caisse updated="+c.getNumerocaisse());
 		return c;
 	}
 
 	
-	@Override
-	public Caisse findCaisseByLoginAndNumC(String login, int codecaisse) {
-		Caisse Caisse =null;
-			 //getSingleResult() 
-			  //Execute a SELECT query that returns a single untyped result.
-			Caisse = (Caisse) getEntityManager().createQuery(
-					 " SELECT c "
-					+" FROM Caisse c "
-					+" WHERE c.utilisateur.login=:login"
-					+" AND c.numerocaisse=codecaisse").setParameter("login", login).setParameter("codecaisse", codecaisse).getSingleResult();
-		if (Caisse!= null)
-			  { 
-		    	   System.out.println("Caisse trouvé par login(CaisseDAO)");
-			   	   return Caisse;
-		      }		       
-		
-		
-		return null;
-	 
-	}
+	
 	
 	@Override
 	public Caisse findByCode(int numcaisse) {
@@ -82,4 +63,27 @@ public class CaisseDAO implements CaisseImpl{
 		return query.getResultList();
 	}
 	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Caisse> findListCaisseByLogin(String login) {
+		System.out.println("login"+login);
+		String requete=" SELECT c "
+				+ " FROM Caisse c "
+				+" WHERE c.utilisateur.login=:login";
+		Query query=getEntityManager().createQuery(requete);
+		query.setParameter("login", login);
+		return  query.getResultList();	
+	}
+	
+	@Override
+	public Caisse findCaisseByLoginCode(String login,int code) {
+		System.out.println("login"+login);
+		String requete=" SELECT c "
+				+ " FROM Caisse c "
+				+" WHERE c.utilisateur.login=:login"
+				+" AND c.numerocaisse=:code";
+		Caisse c=(Caisse) getEntityManager().createQuery(requete).setParameter("login", login).setParameter("code", code).getSingleResult();
+		return  c;	
+	}
 }

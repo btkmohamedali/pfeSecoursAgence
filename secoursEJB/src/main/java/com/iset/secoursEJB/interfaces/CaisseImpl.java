@@ -10,13 +10,18 @@ public interface CaisseImpl {
 
 	List<Caisse> findAllCaisse();
 
-	double retraitCaisse(int numcaisse,String loginuser,double solde, double montant);
+	
 
-
-	double versementCaisse(int numcaisse,String loginuser, double solde, double montant);
-
-	public Caisse findCaisseByLoginAndNumC(String login, int codecaisse);
+//	public Caisse findCaisseByLoginAndNumC(String login, int codecaisse);
 
 	Caisse findByCode(int numcaisse);
+
+	List<Caisse> findListCaisseByLogin(String login);
+
+	double versementCaisse(int numcaisse,String login, double solde, double montant);
+
+	double retraitCaisse(int numcaisse, String login,double solde, double montant);
+
+	Caisse findCaisseByLoginCode(String login, int code);
 
 }

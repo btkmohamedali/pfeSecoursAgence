@@ -57,7 +57,7 @@ public class CompteDAO  implements CompteImpl,Serializable{
 	@Override
 	public List<Compte> findListCompteByCINClient(String NID) {
 		String requete=" SELECT c "
-				+ " FROM Compte c , Client clt "
+				+ " FROM Compte c , Client clt"
 				+ " WHERE  clt=c.client "
 				+ " AND clt.NID=:NID";
 		Query query=getEntityManager().createQuery(requete);

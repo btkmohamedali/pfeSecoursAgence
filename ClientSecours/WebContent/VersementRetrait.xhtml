@@ -131,14 +131,22 @@
 			 <p:outputLabel  for="numcheque" value="Motif" />
 			 <p:inputTextarea id="numcheque"  value="#{clientBean.motif}" />
 				
-			 <p:outputLabel value=" Numero de caisse"/>
-			 <p:inputText  value="#{clientBean.numCaisse}"  required="true" requiredMessage="veuillez inserer le numero de caisse">
-			 <pe:keyFilter regEx="/[0-9]/i"/> 
-			 </p:inputText> 
+			 
+			 
+			 <p:commandButton value="afficher liste caisse" action="#{caisseBean.afficheListeC()}"
+					update="listCaisse" />
+					
+			
+	    	<p:selectOneMenu id="listCaisse" value="#{clientBean.numCaisse}">
+				<f:selectItem itemLabel="Select..." noSelectionOption="true" />
+				<f:selectItems value="#{caisseBean.listeCaisses}"
+					var="item" itemLabel="#{item.numerocaisse}"
+					itemValue="#{item.numerocaisse}">
+				</f:selectItems>
+			</p:selectOneMenu>
 			</p:panelGrid>
 				</p:fieldset>
 			</p:panelGrid>
-				
 				</td>
 				</tr></table>
 				

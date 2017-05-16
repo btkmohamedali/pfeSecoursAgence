@@ -48,10 +48,10 @@ public class VirementDAO implements VirementImpl {
 	}
 	
 	@Override
-	public int countNbrVirement()
+	public long countNbrVirement()
 	{
 		
-		int count=(int) getEntityManager().createQuery("select count(v) from Virement v").getSingleResult();
+		long count=(long) getEntityManager().createQuery("select count(v) from Virement v").getSingleResult();
 		return count;
 	}
 }

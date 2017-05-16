@@ -44,10 +44,10 @@ public class RemiseChequeDAO implements RemiseChequeImpl {
 	}
 
 	@Override
-	public int countNbrRemiseC()
+	public long countNbrRemiseC()
 	{
 		
-		int count=(int) getEntityManager().createQuery("select count(r) from RemiseCheque r").getSingleResult();
+		long count=(long) getEntityManager().createQuery("select count(r) from RemiseCheque r").getSingleResult();
 		return count;
 	}
 }

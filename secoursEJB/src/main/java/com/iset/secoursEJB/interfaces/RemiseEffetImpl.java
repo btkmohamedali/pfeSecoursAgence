@@ -10,6 +10,6 @@ public interface RemiseEffetImpl {
 
 	boolean insertRemiseEffet(RemiseEffet remiseEffet);
 	List<RemiseEffet> findAll();
-	int countNbrRemiseE();
+	long countNbrRemiseE();
 
 }

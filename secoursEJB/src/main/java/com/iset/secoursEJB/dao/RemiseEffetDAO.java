@@ -48,10 +48,10 @@ public class RemiseEffetDAO implements RemiseEffetImpl{
 	
 
 	@Override
-	public int countNbrRemiseE()
+	public long countNbrRemiseE()
 	{
 		
-		int count=(int) getEntityManager().createQuery("select count(r) from RemiseEffet r").getSingleResult();
+		long count=(long) getEntityManager().createQuery("select count(r) from RemiseEffet r").getSingleResult();
 		return count;
 	}
 	

@@ -163,7 +163,7 @@ public class Synchronisation {
 		{
 			System.out.println("afficher utilisateur");
 			String sqlexistance="select * from EVUTI";
-			String requeteinsert="INSERT INTO utilisateur (login,cin,mail,nomprenom,password) VALUES (?,?,?,?,?)";
+			String requeteinsert="INSERT INTO utilisateur (login,cin,mail,nomprenom,password,code_agenceFK) VALUES (?,?,?,?,?,?)";
 			
 			Statement storacle=oracle.Connexion().createStatement();
 		    ResultSet rsselect=storacle.executeQuery(sqlexistance);
@@ -177,6 +177,8 @@ public class Synchronisation {
 		    	stinsert.setString(4, rsselect.getString("LIB"));
 		    	
 		    	stinsert.setString(5, rsselect.getString("MDP"));
+		    	
+		    	stinsert.setString(6, rsselect.getString("AGE"));
 		    	int rowsAdded =stinsert.executeUpdate();
 		    	if (rowsAdded > 0) 
 			    {
