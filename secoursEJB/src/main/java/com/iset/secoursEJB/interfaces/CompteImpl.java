@@ -10,11 +10,11 @@ import com.iset.secoursEJB.entities.Compte;
 public interface CompteImpl {
 
 	List<Compte> selectAll() ;
-	List<Compte> findListCompteByCINClient(int cin);
+	List<Compte> findListCompteByCINClient(String string);
 	double findSoldeCompte(int code);
 	
-	Compte findByCode(int numCompte);
-	double versement(int numCompte, double solde, double montant);
-	double retrait(int numCompte, double solde, double montant);
+	Compte findByCode(long numCompte);
+	double versement(long numCompte, double solde, double montant);
+	double retrait(long l, double solde, double montant);
 	Compte updateCompte(Compte c);
 }

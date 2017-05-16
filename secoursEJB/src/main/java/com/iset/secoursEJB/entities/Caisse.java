@@ -15,6 +15,8 @@ public class Caisse implements Serializable {
 	
 	private int codecaisse;
 	@NotNull
+	private int numerocaisse;
+	@NotNull
 	private double soldeCaisse ;
 	
 	
@@ -69,6 +71,18 @@ public class Caisse implements Serializable {
 
 	public void setSoldeCaisse(double soldeCaisse) {
 		this.soldeCaisse = soldeCaisse;
+	}
+
+
+
+	public int getNumerocaisse() {
+		return numerocaisse;
+	}
+
+
+
+	public void setNumerocaisse(int numerocaisse) {
+		this.numerocaisse = numerocaisse;
 	}
 	
 

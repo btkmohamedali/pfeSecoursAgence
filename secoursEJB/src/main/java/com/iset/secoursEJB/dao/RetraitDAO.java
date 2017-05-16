@@ -42,5 +42,11 @@ public class RetraitDAO implements RetraitImpl{
 		Query query=getEntityManager().createQuery("select r from Retrait r");
 		return query.getResultList();
 	}
-
+	@Override
+	public long countNbrRetrait()
+	{
+		long count;
+		 count=(long) getEntityManager().createQuery("select count(r) from Retrait r").getSingleResult();
+		return count;
+	}
 }

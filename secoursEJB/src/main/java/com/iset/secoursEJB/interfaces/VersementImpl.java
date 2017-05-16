@@ -8,5 +8,6 @@ public interface VersementImpl {
 
 	boolean insertVersement(Versement Versement);
 	List<Versement> findAll();
+	long countNbrVersement();
 
 }

@@ -7,6 +7,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import com.iset.secoursEJB.entities.Operation;
 import com.iset.secoursEJB.interfaces.OperationImpl;
+import com.iset.secoursEJB.interfaces.RemiseChequeImpl;
+import com.iset.secoursEJB.interfaces.RemiseEffetImpl;
+import com.iset.secoursEJB.interfaces.RetraitImpl;
+import com.iset.secoursEJB.interfaces.VersementImpl;
+import com.iset.secoursEJB.interfaces.VirementImpl;
 
 
 @SuppressWarnings("serial")
@@ -16,6 +21,17 @@ public class OperationBean implements Serializable{
 
 	@EJB
 	private OperationImpl  daoOperation;
+	
+	@EJB
+	private RetraitImpl  daoretrait;
+	@EJB 
+	private VersementImpl daoversement;
+	@EJB 
+	private VirementImpl daovirement;
+	@EJB
+	private RemiseChequeImpl daoremiseC;
+	@EJB 
+	private RemiseEffetImpl daoremiseE;
 	
 	private Operation operation=new Operation();
 
@@ -30,5 +46,40 @@ public class OperationBean implements Serializable{
 	public List<Operation> findAll()
 	{
 		return daoOperation.findAll();
+	}
+	
+	public long countRetrait()
+	{
+		long x=daoretrait.countNbrRetrait();
+		System.out.println(x);
+		return x;
+	}
+	
+	public long countVersement()
+	{
+		long x=daoversement.countNbrVersement();
+		System.out.println(x);
+		return x;
+	}
+	
+	public int countVirement()
+	{
+		int x=daovirement.countNbrVirement();
+		System.out.println(x);
+		return x;
+	}
+	
+	public int countRemiseC()
+	{
+		int x=daoremiseC.countNbrRemiseC();
+		System.out.println(x);
+		return x;
+	}
+	
+	public int countRemiseE()
+	{
+		int x=daoremiseE.countNbrRemiseE();
+		System.out.println(x);
+		return x;
 	}
 }

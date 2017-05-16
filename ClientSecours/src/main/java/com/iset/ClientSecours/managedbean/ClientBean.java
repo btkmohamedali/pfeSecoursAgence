@@ -89,7 +89,7 @@ public class ClientBean implements Serializable {
 	private Compte compteBeneficiaire=new Compte();
 	private Utilisateur login=new Utilisateur();
 	private Operation operation=new Operation();
-	private int numCompte;
+	private long numCompte;
 	public int numCompteBeneficiaire;
 	private String type_operation;
 	private String clientinoutBTK;
@@ -226,7 +226,7 @@ public class ClientBean implements Serializable {
 		try 
 		{
 			System.out.println("cinClient="+client.getNID());
-			if((client.getNID()==0))
+			if((client.getNID()==null))
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "inserer un numero de cin");
 				RequestContext.getCurrentInstance().update("growl");
@@ -267,7 +267,7 @@ public class ClientBean implements Serializable {
 				context.addMessage(null, message);
 			}
 			else
-			if(clientBeneficiaire.getNID()==0 )
+			if(clientBeneficiaire.getNID()==null)
 				{	
 					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "inserer un cin correct");
 					RequestContext.getCurrentInstance().update("growl");
@@ -326,7 +326,7 @@ public class ClientBean implements Serializable {
 	public void searchCompte( )
 	{
 		System.out.println(client.getNID());
-		if(client.getNID()==0)
+		if(client.getNID()==null)
 		{
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,"Warning", "insert cin avant d'afficher le compte");
 			RequestContext.getCurrentInstance().update("growl");
@@ -352,7 +352,7 @@ public class ClientBean implements Serializable {
 	
 	//chercher compte beneficiaire
 	public void searchCompteBeneficiaire( ){
-		if(clientBeneficiaire.getNID()==0)
+		if(clientBeneficiaire.getNID()==null)
 		{
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,"Warning", "insert cin avant");
 			RequestContext.getCurrentInstance().update("growl");
@@ -442,11 +442,11 @@ public class ClientBean implements Serializable {
 		return true;
 	}
 
-	public int getNumCompte() {
+	public long getNumCompte() {
 		return numCompte;
 	}
 
-	public void setNumCompte(int numCompte) {
+	public void setNumCompte(long numCompte) {
 		this.numCompte = numCompte;
 	}
 
@@ -907,7 +907,7 @@ public class ClientBean implements Serializable {
 		if(radioValue.equals("btk"))
 		{
 			System.out.println("compte client");
-			if(clientBeneficiaire.getNID()==0)
+			if(clientBeneficiaire.getNID()==null)
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "veuillez inserer le cin avant");
 				RequestContext.getCurrentInstance().update("growl");
@@ -1151,7 +1151,7 @@ public class ClientBean implements Serializable {
 		if(radioValue.equals("btk"))
 		{
 			System.out.println("compte client");
-			if(clientBeneficiaire.getNID()==0)
+			if(clientBeneficiaire.getNID()==null)
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "veuillez inserer le cin avant");
 				RequestContext.getCurrentInstance().update("growl");
@@ -1369,7 +1369,7 @@ public class ClientBean implements Serializable {
 				if(radioValue.equals("btk"))
 				{
 					System.out.println("compte client");
-					if(clientBeneficiaire.getNID()==0)
+					if(clientBeneficiaire.getNID()==null)
 					{
 						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "veuillez inserer le cin avant");
 						RequestContext.getCurrentInstance().update("growl");
@@ -1481,7 +1481,7 @@ public class ClientBean implements Serializable {
 		
 		
 		System.out.println("cin avant "+client.getNID());
-		client.setNID(0);
+		client.setNID(null);
 		System.out.println("cin apres"+client.getNID());
 		client.setNom(null);
 		client.setCodeClient(0);

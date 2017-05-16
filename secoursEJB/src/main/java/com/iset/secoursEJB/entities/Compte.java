@@ -19,7 +19,7 @@ import com.iset.secoursEJB.entities.Operation;
 public class Compte implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private int codeCompte;
+	private long codeCompte;
 	
 	@NotNull()
 	private double solde;
@@ -27,6 +27,7 @@ public class Compte implements Serializable{
 	private Date date_creation;
 	@NotNull()
 	private String type_compte;
+	
 	private double autorisation;
 	
 	
@@ -57,9 +58,7 @@ public class Compte implements Serializable{
 		this.type_compte = type_compte;
 	}
 
-	public void setCodeCompte(int codeCompte) {
-		this.codeCompte = codeCompte;
-	}
+	
 
 
 
@@ -75,10 +74,10 @@ public class Compte implements Serializable{
 	
 	@Id
 	@Column(name="codeCompte")
-	public int getCodeCompte() {
+	public long getCodeCompte() {
 		return codeCompte;
 	}
-	public void setCodeCompte1(int codeCompte) {
+	public void setCodeCompte(long codeCompte) {
 		this.codeCompte = codeCompte;
 	}
 

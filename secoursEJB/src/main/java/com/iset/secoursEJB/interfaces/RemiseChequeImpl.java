@@ -8,5 +8,6 @@ public interface RemiseChequeImpl {
 
 	boolean insertRemiseCheque(RemiseCheque remiseCheque);
 	List<RemiseCheque> findAll();
+	int countNbrRemiseC();
 
 }

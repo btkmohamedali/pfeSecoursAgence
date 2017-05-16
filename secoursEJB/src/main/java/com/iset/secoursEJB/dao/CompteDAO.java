@@ -55,13 +55,13 @@ public class CompteDAO  implements CompteImpl,Serializable{
 	//afficher list des comptes dun client par son cin
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Compte> findListCompteByCINClient(int cin) {
+	public List<Compte> findListCompteByCINClient(String NID) {
 		String requete=" SELECT c "
 				+ " FROM Compte c , Client clt "
 				+ " WHERE  clt=c.client "
-				+ " AND clt.cin=:cin";
+				+ " AND clt.NID=:NID";
 		Query query=getEntityManager().createQuery(requete);
-		query.setParameter("cin", cin);
+		query.setParameter("NID", NID);
 		return  query.getResultList();	
 	}
 	
@@ -90,20 +90,20 @@ public class CompteDAO  implements CompteImpl,Serializable{
 	
 	//chercher compte a partir du numero de compte 
 	@Override
-	public Compte findByCode(int numCompte) {
+	public Compte findByCode(long numCompte) {
 		
 		return getEntityManager().find(Compte.class, numCompte);
 	}
 	
 	
 	@Override
-	public double versement(int numCompte, double solde, double montant) {
+	public double versement(long numCompte, double solde, double montant) {
 		Compte c=new Compte();
 		c=findByCode(numCompte);
 		return c.getSolde()+montant;
 	}
 	@Override
-	public double retrait(int numCompte, double solde, double montant) {
+	public double retrait(long numCompte, double solde, double montant) {
 		Compte c=new Compte();
 		c=findByCode(numCompte);
 		System.out.println("solde="+solde);

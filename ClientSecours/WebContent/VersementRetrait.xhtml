@@ -49,9 +49,7 @@
 							<p:menuitem id="c" value="ActiverServiceSecours.xhtml" rendered="#{clientBean.loginFromSession=='feriel'}"/>
            			 </p:submenu>
 		          <p:separator />
-		        	<c:if test="#{clientBean.loginFromSession=='feriel'}">
-						<li><a href="ActiverServiceSecours.xhtml">Synchronisation</a></li>
-           			 </c:if>
+		        	
 		        </p:submenu>
 		 		
 		 		<f:facet name="options">
@@ -75,11 +73,11 @@
 					<p:panelGrid id="panelClient" columns="2" style="font-size:18px;">
 					<p:fieldset legend="Client 1"  style="width:500px">
 				
-						<p:outputLabel value="CIN " />
+						<p:outputLabel value="NID " />
 						<p:separator/>
 					
 					<p:panelGrid id="panelClientsComptes" columns="2" cellpadding="10">
-						<p:inputText value="#{clientBean.client.cin}" required="true" requiredMessage="veuillez inserer cin">
+						<p:inputText value="#{clientBean.client.NID}" required="true" requiredMessage="veuillez inserer cin">
 							<pe:keyFilter regEx="/[0-9]/i" />
 						</p:inputText>
 					

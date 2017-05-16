@@ -9,7 +9,7 @@ import com.iset.secoursEJB.entities.Client;
 public interface ClientImpl {
 
 	List<Client> findAll();
-	Client findClient(int cin);
+	Client findClient(String cin);
 	
-	Client findByCode(int codeClient);
+	Client findByCode(int code);
 }

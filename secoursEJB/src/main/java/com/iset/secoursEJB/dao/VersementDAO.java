@@ -45,4 +45,12 @@ public class VersementDAO implements VersementImpl {
 		Query query=getEntityManager().createQuery("select v from Versement v");
 		return query.getResultList();
 	}
+	
+	@Override
+	public long countNbrVersement()
+	{
+		
+		long count=(long) getEntityManager().createQuery("select count(v) from Versement v").getSingleResult();
+		return count;
+	}
 }

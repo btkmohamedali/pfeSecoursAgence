@@ -46,5 +46,13 @@ public class VirementDAO implements VirementImpl {
 		Query query=getEntityManager().createQuery("select v from Virement v");
 		return query.getResultList();
 	}
+	
+	@Override
+	public int countNbrVirement()
+	{
+		
+		int count=(int) getEntityManager().createQuery("select count(v) from Virement v").getSingleResult();
+		return count;
+	}
 }
 

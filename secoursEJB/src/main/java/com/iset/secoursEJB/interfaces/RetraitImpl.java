@@ -8,6 +8,7 @@ public interface RetraitImpl {
 
 	boolean insertRetrait(Retrait Retrait);
 	List<Retrait> findAll();
+	long countNbrRetrait();
 
 
 }

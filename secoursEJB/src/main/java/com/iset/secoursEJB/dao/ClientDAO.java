@@ -58,17 +58,17 @@ public class ClientDAO implements ClientImpl,ClientLocal{
 	
 	//chercher client par cin
 	@Override
-	public Client findClient(int cin) {
+	public Client findClient(String NID) {
 		Client client =null;
 			 //getSingleResult() 
 			  //Execute a SELECT query that returns a single untyped result.
 			client = (Client) getEntityManager().createQuery(
 					 " SELECT c "
 					+" FROM Client c "
-					+" WHERE c.cin=:cin").setParameter("cin", cin).getSingleResult();
+					+" WHERE c.NID=:NID").setParameter("NID", NID).getSingleResult();
 		if (client!= null)
 			  { 
-		    	   System.out.println("client trouvé par cin(ClientDAO)");
+		    	   System.out.println("client trouvé par NID(ClientDAO)");
 			   	   return client;
 		      }		       
 		
@@ -83,6 +83,8 @@ public class ClientDAO implements ClientImpl,ClientLocal{
 		return getEntityManager().find(Client.class, codeClient);
 		
 	}
+	
+	
 	
 	
 	

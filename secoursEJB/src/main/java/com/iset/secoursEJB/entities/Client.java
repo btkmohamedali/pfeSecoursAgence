@@ -22,9 +22,9 @@ private static final long serialVersionUID = 1L;
 	private int codeClient;
 	
 	@NotNull
-	private int TID;
+	private String TID;
 	@NotNull
-	private int NID;
+	private String NID;
 	@NotNull
 	private String nom;
 	@NotNull
@@ -50,16 +50,16 @@ private static final long serialVersionUID = 1L;
 	}
 	
 	
-	public int getTID() {
+	public String getTID() {
 		return TID;
 	}
-	public void setTID(int tID) {
+	public void setTID(String tID) {
 		TID = tID;
 	}
-	public int getNID() {
+	public String getNID() {
 		return NID;
 	}
-	public void setNID(int nID) {
+	public void setNID(String nID) {
 		NID = nID;
 	}
 	public String getNom() {

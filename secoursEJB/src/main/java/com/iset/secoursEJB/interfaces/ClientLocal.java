@@ -10,7 +10,7 @@ public interface ClientLocal {
 	
 
 		List<Client> findAll();
-		Client findClient(int cin);
+		Client findClient(String cin);
 		Client findByCode(int codeClient);
 		
 	

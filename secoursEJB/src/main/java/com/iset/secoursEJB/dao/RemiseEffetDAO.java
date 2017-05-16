@@ -45,4 +45,15 @@ public class RemiseEffetDAO implements RemiseEffetImpl{
 		Query query=getEntityManager().createQuery("select r from RemiseEffet r");
 		return query.getResultList();
 	}
+	
+
+	@Override
+	public int countNbrRemiseE()
+	{
+		
+		int count=(int) getEntityManager().createQuery("select count(r) from RemiseEffet r").getSingleResult();
+		return count;
+	}
+	
+	
 }

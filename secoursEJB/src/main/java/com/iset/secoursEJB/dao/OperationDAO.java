@@ -27,7 +27,7 @@ public class OperationDAO implements OperationImpl {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Operation> findAll() {
-		Query query=getEntityManager().createQuery("select o from Operation o Where o.codeoperation=1 or o.codeoperation=2 ");
+		Query query=getEntityManager().createQuery("select o from Operation o");
 		return query.getResultList();
 	}
 

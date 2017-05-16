@@ -8,55 +8,146 @@ import java.sql.Statement;
 import com.iset.Connexion.ConnexionJDBC;
 import com.iset.Connexion.ConnexionORACLE;
 
-public class DeltaOracle {
+public class Synchronisation {
 	ConnexionORACLE oracle=new ConnexionORACLE();
 	ConnexionJDBC mysql=new ConnexionJDBC();
 	
-	public void nocheck() throws SQLException
+	public void supprimerTables()
 	{
-		String contraintes="ALTER TABLE agence  DROP CONSTRAINT codeAgence";
-		//suppression de la table caisse
-		System.out.println("ALTER TABLE caisse NOCHECK CONSTRAINT ALL");
-	    PreparedStatement stcont= mysql.Connexion().prepareStatement(contraintes);
-	    int row=stcont.executeUpdate();
-	    if (row > 0) 
+		String nocheck="SET FOREIGN_KEY_CHECKS=0;";
+		String deleteagence="DELETE FROM agence;";
+		String check=" SET FOREIGN_KEY_CHECKS=1;";
+		String dropclient="DELETE FROM client";
+		String deleteevuti="DELETE FROM utilisateur";
+		String dropoperation="DELETE FROM operation";
+		String dropcaisse="DELETE FROM caisse";
+		String dropcompte="DELETE FROM compte";
+		//suppression de la table agence
+	  Statement statement;
+		try 
+		{
+			mysql.Connexion().setAutoCommit(false) ;
+			statement = mysql.Connexion().createStatement();
+			statement.addBatch(nocheck);
+			
+			statement.addBatch(deleteagence);
+			statement.addBatch(deleteevuti);
+			statement.addBatch(dropclient);
+			statement.addBatch(dropoperation);
+			statement.addBatch(dropcaisse);
+			statement.addBatch(dropcompte);
+			statement.addBatch(check);
+			
+			statement.executeBatch();
+		} 
+		catch (SQLException e) 
+		{
+			
+			e.printStackTrace();
+		}
+	    
+	}
+
+	public void synchroniserClient()
+	{
+		try
+		{
+			System.out.println("afficher client");
+			String sqlexistance="select * from BKCLI";
+			 
+		    
+		    Statement storacle=oracle.Connexion().createStatement();
+		    ResultSet rsoracle=storacle.executeQuery(sqlexistance);
+		    String requeteinsert="INSERT INTO"
+					+ " client(codeClient,NID,TID,nom,prenom,code_agenceFK) "
+					+ "VALUES (?,?,?,?,?,?)";
+		    PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
+		    while(rsoracle.next())
+		    {
+				
+				stinsert.setString(1, rsoracle.getString("CLI"));
+		    	stinsert.setString(2, rsoracle.getString("NID"));
+		    	stinsert.setString(3, rsoracle.getString("TID"));
+		    	stinsert.setString(4, rsoracle.getString("NOM"));
+		    	stinsert.setString(5, rsoracle.getString("PRE"));
+		    	stinsert.setString(6, rsoracle.getString("AGE"));
+		    	int rowsAdded =stinsert.executeUpdate();
+		    	if (rowsAdded > 0) 
+			    {
+			        System.out.println(" added successfully client!");
+			    }
+		    }
+		}
+	    catch(SQLException ex)
 	    {
-	        System.out.println(" contrainte desactivée!");
+	        ex.printStackTrace();
 	    }
+		
+	}
+	
+	public void nocheck() 
+	{
+		try 
+		{
+			System.out.println("SET foreign_key_checks = 0");
+			String contraintes="ALTER TABLE deltasecours.caisse DROP FOREIGN KEY code_agenceFK";
+			//suppression de la table caisse
+			
+		    Statement stcont= mysql.Connexion().createStatement();
+		    int row=stcont.executeUpdate(contraintes);
+		    System.out.println(row);
+		    if (row != 0) 
+		    {
+		        System.out.println(" contrainte desactivée!");
+		    }
+	    } 
+		catch (SQLException e) 
+		{
+			
+			e.printStackTrace();
+		}
+	}
+	
+	public void check() 
+	{
+		try 
+		{
+			System.out.println("SET foreign_key_checks = 1;");
+			String contraintes="SET foreign_key_checks = 1;";
+			//suppression de la table caisse
+			
+		    PreparedStatement stcont= mysql.Connexion().prepareStatement(contraintes);
+		    int row=stcont.executeUpdate();
+		    System.out.println(row);
+		    if (row > 0) 
+		    {
+		        System.out.println(" contrainte desactivée!");
+		    }
+	    } catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
 	}
 	public void synchroniserAgence()
 	{
 		try
 		{
-			
 			String sqlexistance="select * from BKAGE";
-			String requetedelete="DELETE FROM agence";
-			String requeteinsert="INSERT INTO agence (codeAgence,libelle_Agence) VALUES (?, ?)";
-			//suppression de la table agence
-		    PreparedStatement statement = mysql.Connexion().prepareStatement(requetedelete);
-		    int rowsDeleted = statement.executeUpdate();
-		    if (rowsDeleted > 0) 
-		    {
-		        System.out.println(" deleted successfully!");
-		    }
 			/* Création de l'objet gérant les requêtes */
 			Statement storacle=oracle.Connexion().createStatement();
+			
 			/* Exécution d'une requête de lecture */
 		    ResultSet rscount=storacle.executeQuery(sqlexistance);
-	    	PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
+		    String requeteinsert="INSERT INTO agence (codeAgence,libelle_Agence) VALUES (?,?)";
+    		PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
+	    	
 	    	while(rscount.next())
 		    {
-		    	
-		    	stinsert.setString(1, rscount.getString("AGE"));
+	    		stinsert.setString(1, rscount.getString("AGE"));
 		    	stinsert.setString(2, rscount.getString("LIB"));
 		    	int rowsAdded =stinsert.executeUpdate();
-		    	if (rowsAdded > 0) 
-			    {
-			        System.out.println(" added successfully!");
-			    }
-		    	//System.out.println(rscount.getString("AGE"));
-		    	//System.out.println(rscount.getString("LIB"));
-		    	
+		    	if(rowsAdded>0)
+		    	System.out.println("agence added with succes");
 		    }
 		    
 		}
@@ -72,17 +163,9 @@ public class DeltaOracle {
 		{
 			System.out.println("afficher utilisateur");
 			String sqlexistance="select * from EVUTI";
-			String requetedelete="DELETE FROM utilisateur";
 			String requeteinsert="INSERT INTO utilisateur (login,cin,mail,nomprenom,password) VALUES (?,?,?,?,?)";
 			
-			PreparedStatement statement = mysql.Connexion().prepareStatement(requetedelete);
-			  int rowsDeleted = statement.executeUpdate();
-			    if (rowsDeleted > 0) 
-			    {
-			        System.out.println(" deleted successfully!");
-			    } 
-		    
-		    Statement storacle=oracle.Connexion().createStatement();
+			Statement storacle=oracle.Connexion().createStatement();
 		    ResultSet rsselect=storacle.executeQuery(sqlexistance);
 		    PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
 		    while(rsselect.next())
@@ -98,7 +181,7 @@ public class DeltaOracle {
 		    	if (rowsAdded > 0) 
 			    {
 		    		
-			        System.out.println(" added successfully!");
+			        System.out.println(" added successfully utilisateur!");
 			    }
 		    	/*System.out.println("cuti="+rsselect.getString("CUTI"));
 		    	System.out.println("mot de passe="+rsselect.getString("MDP"));
@@ -113,60 +196,42 @@ public class DeltaOracle {
 	        ex.printStackTrace();
 	    }
 	}
-	
-	
-	
-	
+		
 	public void synchroniserCaisse()
 	{
 		try
 		{
-			String contraintes="ALTER TABLE caisse NOCHECK CONSTRAINT ALL";
+			
 			String sqlexistance="select * from BKCAI";
-			String requetedelete="DELETE FROM caisse";
-			String requeteinsert="INSERT INTO caisse(codecaisse,soldeCaisse,code_agenceFK,code_utilisateurFK) VALUES (?,?,?,?)";
-			//suppression de la table caisse
-			System.out.println("ALTER TABLE caisse NOCHECK CONSTRAINT ALL");
-		    PreparedStatement stcont= mysql.Connexion().prepareStatement(contraintes);
-		    int row=stcont.executeUpdate();
-		    if (row > 0) 
-		    {
-		        System.out.println(" contrainte desactivée!");
-		    }
-		    
-		    
-		    
-		    
-		    PreparedStatement statementcaisse = mysql.Connexion().prepareStatement(requetedelete);
-		    int rowsDeleted = statementcaisse.executeUpdate();
-		    if (rowsDeleted > 0) 
-		    {
-		        System.out.println(" deleted successfully!");
-		    } 
-		    
+			String requeteinsert="INSERT INTO caisse(numerocaisse,soldeCaisse,code_agenceFK,code_utilisateurFK) VALUES (?,?,?,?)";
+			 
+		    PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
 		    Statement storacle=oracle.Connexion().createStatement();
-		    ResultSet rscount=storacle.executeQuery(sqlexistance);
-		    while(rscount.next())
+		    ResultSet rscaisse=storacle.executeQuery(sqlexistance);
+		    while(rscaisse.next())
 		    {
-		    	PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
 		    	
-		    	stinsert.setString(1, rscount.getString("CAI"));
 		    	
-		    	stinsert.setString(2, rscount.getString("SJO"));
+		    	stinsert.setString(1, rscaisse.getString("CAI"));
 		    	
-		    	stinsert.setString(3, rscount.getString("AGE"));
+		    	stinsert.setDouble(2, rscaisse.getDouble("SJO"));
+		    	
+		    	stinsert.setString(3, rscaisse.getString("AGE"));
 			  
-		    	stinsert.setString(4, rscount.getString("CUTI"));
+		    	stinsert.setString(4, rscaisse.getString("CUTI"));
+		    	
 		    	int rowsAdded =stinsert.executeUpdate();
 		    	if (rowsAdded > 0) 
 			    {
-			        System.out.println(" added successfully!");
+		    		System.out.println(rowsAdded);
+			        System.out.println(" added successfully caisse!");
 			    }
-		    	/*System.out.println("\n agence= "+rscount.getString("AGE"));
-		    	System.out.println("code caisse= "+rscount.getString("CAI"));
-		    	System.out.println("code utilisateur= "+rscount.getString("CUTI"));
-		    	System.out.println("date= "+rscount.getString("DOU"));
-		    	System.out.println("solde= "+rscount.getString("SJO"));*/
+		    	/*System.out.println("\n agence= "+rscaisse.getString("AGE"));
+		    	System.out.println("code caisse= "+rscaisse.getString("CAI"));
+		    	
+		    	System.out.println("date= "+rscaisse.getString("DOU"));
+		    	System.out.println("solde= "+rscaisse.getString("SJO"));
+		    	System.out.println("code utilisateur= "+rscaisse.getString("CUTI"));*/
 		    }
 		}
 	    catch(SQLException ex)
@@ -175,28 +240,46 @@ public class DeltaOracle {
 	    }
 	}
 	
-	
-
-	public void afficherCompte()
+	public void synchroniserCompte()
 	{
 		try
 		{
 			System.out.println("afficher compte");
 			String sqlexistance="select * from BKCOM";
 			
-		    
+			String requeteinsert="INSERT INTO compte(codeCompte,autorisation,date_creation,solde,type_compte,code_agenceFK,code_clientFK) VALUES (?,?,?,?,?,?,?)";
+			
+		    PreparedStatement stinsert = mysql.Connexion().prepareStatement(requeteinsert);
 		    Statement storacle=oracle.Connexion().createStatement();
-		    ResultSet rscount=storacle.executeQuery(sqlexistance);
-		    while(rscount.next())
+		    ResultSet rscompte=storacle.executeQuery(sqlexistance);
+		    /* Exécution d'une requête de lecture */
+			System.out.println(rscompte.next());
+		    while((rscompte.next()))
 		    {
-		    	System.out.println("numero compte="+rscount.getString("NCP"));
-		    	System.out.println("agence ="+rscount.getString("AGE"));
-		    	System.out.println("code client="+rscount.getString("CLI"));
-		    	System.out.println("type_compte="+rscount.getString("INTI"));
-		    	System.out.println("date douverture="+rscount.getString("DOU"));
-		    	System.out.println("solde="+rscount.getString("SIN"));
-		    	System.out.println("autorisation="+rscount.getString(""));
-		    }
+		    	
+		    	stinsert.setString(1, rscompte.getString("NCP"));
+		    	
+		    	stinsert.setDouble(2,0);
+		    	
+		    	stinsert.setDate(3, rscompte.getDate("DOU"));
+			  
+		    	stinsert.setDouble(4, rscompte.getDouble("SIN"));
+		    	
+		    	stinsert.setString(5, rscompte.getString("INTI"));
+		    	
+		    	stinsert.setInt(6, rscompte.getInt("AGE"));
+		    	
+		    	stinsert.setInt(7, rscompte.getInt("CLI"));
+			  
+		    	int rowsAdded =stinsert.executeUpdate();
+		    	
+		    	if (rowsAdded > 0) 
+				    {
+			    		System.out.println(rowsAdded);
+				        System.out.println(" added successfully compte!");
+				    }
+		    }	
+		
 		}
 	    catch(SQLException ex)
 	    {
@@ -204,31 +287,92 @@ public class DeltaOracle {
 	    }
 	}
 	
-	public void afficherClient()
+	public void deleteDatabase()
 	{
-		try
+		String drop="drop database deltasecours";
+		//suppression de la table agence
+	    PreparedStatement statement ;
+		try 
 		{
-			System.out.println("afficher client");
-			String sqlexistance="select * from BKCLI";
-			
-		    
-		    Statement storacle=oracle.Connexion().createStatement();
-		    
-		    ResultSet rscount=storacle.executeQuery(sqlexistance);
-		    while(rscount.next())
-		    {
-		    	System.out.println("code client="+rscount.getString("CLI"));
-		    	System.out.println("nom client="+rscount.getString("NOM"));
-		    	System.out.println("prenom client="+rscount.getString("PRE"));
-		    	System.out.println("code agence="+rscount.getString("AGE"));
-		    	System.out.println("type identifiant="+rscount.getString("TID"));
-		    	System.out.println("code identifiant="+rscount.getString("NID"));
-		    }
+		
+		statement = mysql.Connexion().prepareStatement(drop);
+		int delete=statement.executeUpdate();
+		if(delete > 0)
+		{
+			System.out.println("database deleted");
 		}
-	    catch(SQLException ex)
-	    {
-	        ex.printStackTrace();
-	    }
+		
+		 
+		
+		} 
+		catch (SQLException e) 
+		{
+			
+			e.printStackTrace();
+		}
+	}
+	
+	public void createDatabase()
+	{
+		String drop="create database deltasecours";
+		//suppression de la table agence
+		PreparedStatement statement ;
+		try 
+		{
+			
+			statement = mysql.Connexion().prepareStatement(drop);
+			int delete=statement.executeUpdate();
+			if(delete > 0)
+			{
+				System.out.println("database created");
+			}
+			
+			 
+			
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+
+	public void updateAutorisation()
+	{
+		try 
+		{
+			String sqlexistance="select BKAUTC.MAUT, BKAUTC.NCP "
+					+ "from BKAUTC "
+					+ "where trunc (sysdate)<= BKAUTC.ech "
+					
+					+ "and BKAUTC.maut>0 "
+					+ "and BKAUTC.sit = 'O' "
+					+ " and (age , NCP) in "
+					+ "(select age ,NCP from BKCOM where cfe='N')";;
+			Statement storacle=oracle.Connexion().createStatement();
+			ResultSet rsauto=storacle.executeQuery(sqlexistance);
+			
+			Statement stupdate = mysql.Connexion().createStatement();  
+			
+			while (rsauto.next()) 
+			{
+				System.out.println(rsauto.getString("NCP"));
+				System.out.println(rsauto.getString("MAUT"));
+				String updateauto="UPDATE compte set autorisation="
+				+rsauto.getDouble("MAUT")+"where codeCompte="+rsauto.getString("NCP");
+		
+				int x=stupdate.executeUpdate(updateauto);
+				System.out.println(x);
+			}
+			
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
 		
 	}
 }
