@@ -1,17 +1,22 @@
 package com.iset.secoursEJB.interfaces;
 
+import java.util.List;
+
 import com.iset.secoursEJB.entities.Caisse;
 
 public interface CaisseImpl {
 
-	Caisse updateCaisse(Caisse c);
+	Caisse updateCaisse(Caisse c);	
 
-	double retraitCaisse(String login,double solde ,double montant);
+	List<Caisse> findAllCaisse();
 
-	double versementCaisse(String login,double solde  , double montant);
+	double retraitCaisse(int numcaisse,String loginuser,double solde, double montant);
 
-	Caisse findByCode(int codecaisse);
 
-	Caisse findCaisseByLogin(String loginFromSession);
+	double versementCaisse(int numcaisse,String loginuser, double solde, double montant);
+
+	public Caisse findCaisseByLoginAndNumC(String login, int codecaisse);
+
+	Caisse findByCode(int numcaisse);
 
 }

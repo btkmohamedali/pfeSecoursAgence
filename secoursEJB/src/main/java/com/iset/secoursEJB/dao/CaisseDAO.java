@@ -1,8 +1,11 @@
 package com.iset.secoursEJB.dao;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.iset.secoursEJB.entities.Caisse;
 import com.iset.secoursEJB.interfaces.CaisseImpl;
@@ -22,17 +25,17 @@ public class CaisseDAO implements CaisseImpl{
 	}
 
 	@Override
-	public double versementCaisse(String login,double solde  , double montant) {
+	public double versementCaisse(int numcaisse,String loginuser,double solde  , double montant) {
 		Caisse c=new Caisse();
-		c=findCaisseByLogin(login);
+		c=findCaisseByLoginAndNumC(loginuser,numcaisse);
 		System.out.println("code caisse="+c.getCodecaisse());
 		System.out.println(montant);
 		return c.getSoldeCaisse()+montant;
 	}
 	@Override
-	public double retraitCaisse(String login,double solde  , double montant) {
+	public double retraitCaisse(int numcaisse,String loginuser,double solde  , double montant) {
 		Caisse c=new Caisse();
-		c=findCaisseByLogin(login);
+		c=findCaisseByLoginAndNumC(loginuser,numcaisse);
 		System.out.println("code caisse="+c.getCodecaisse());
 		System.out.println(montant);
 		return c.getSoldeCaisse()- montant ;
@@ -46,14 +49,15 @@ public class CaisseDAO implements CaisseImpl{
 
 	
 	@Override
-	public Caisse findCaisseByLogin(String login) {
+	public Caisse findCaisseByLoginAndNumC(String login, int codecaisse) {
 		Caisse Caisse =null;
 			 //getSingleResult() 
 			  //Execute a SELECT query that returns a single untyped result.
 			Caisse = (Caisse) getEntityManager().createQuery(
 					 " SELECT c "
 					+" FROM Caisse c "
-					+" WHERE c.utilisateur.login=:login").setParameter("login", login).getSingleResult();
+					+" WHERE c.utilisateur.login=:login"
+					+" AND c.numerocaisse=codecaisse").setParameter("login", login).setParameter("codecaisse", codecaisse).getSingleResult();
 		if (Caisse!= null)
 			  { 
 		    	   System.out.println("Caisse trouvé par login(CaisseDAO)");
@@ -64,9 +68,18 @@ public class CaisseDAO implements CaisseImpl{
 		return null;
 	 
 	}
+	
 	@Override
-	public Caisse findByCode(int codecaisse) {
-		return getEntityManager().find(Caisse.class, codecaisse);
+	public Caisse findByCode(int numcaisse) {
+		return getEntityManager().find(Caisse.class, numcaisse);
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Caisse> findAllCaisse() {
+		Query query=getEntityManager().createQuery("select c from Caisse c");
+		return query.getResultList();
+	}
+	
 }

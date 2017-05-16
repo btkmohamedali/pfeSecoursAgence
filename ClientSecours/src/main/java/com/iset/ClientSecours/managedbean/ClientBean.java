@@ -104,6 +104,7 @@ public class ClientBean implements Serializable {
 	public String radioValue;
 	public String motif;
 	public long numEffet ;
+	public int numCaisse;
 	public Date date=new  Date();
 	String loginFromSession = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("login");
 
@@ -595,11 +596,13 @@ public class ClientBean implements Serializable {
 	
 	public void operationChoisi()
 	{
-		Caisse caisse=daocaisse.findCaisseByLogin(loginFromSession);
+		System.out.println("numero caisse" +numCaisse);
+		System.out.println("login user"+loginFromSession);
+		Caisse caisse=daocaisse.findCaisseByLoginAndNumC(loginFromSession, numCaisse);
 		System.out.println("retrait/versement");
 		System.out.println("typeop="+type_operation);
 		double montant=0;
-		if((type_operation==null)&&(montantVR==0))
+		if((type_operation==null)&&(montantVR==0)&& (numCaisse==0))
 		{
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Warning", "veuillez inserer le montant et choisir une operation");
 			RequestContext.getCurrentInstance().update("growl");
@@ -623,6 +626,14 @@ public class ClientBean implements Serializable {
 			context.addMessage(null, message);
 		}
 		else
+		if(numCaisse==0)
+		{
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,"Warning", "inserer numero de caisse appropriée");
+			RequestContext.getCurrentInstance().update("growl");
+			FacesContext context=FacesContext.getCurrentInstance();
+			context.addMessage(null, message);
+		}
+		else
 		{
 		if(type_operation.equals("Versement"))
 		{
@@ -639,7 +650,7 @@ public class ClientBean implements Serializable {
 				System.out.println("solde updated="+getSolde());
 				System.out.println("solde de caisse="+caisse.getSoldeCaisse());
 				
-				montantcaisse=daocaisse.versementCaisse(loginFromSession,caisse.getSoldeCaisse(),montantVR);
+				montantcaisse=daocaisse.versementCaisse(numCaisse,loginFromSession,caisse.getSoldeCaisse(),montantVR);
 				
 				System.out.println("solde caisse="+caisse.getSoldeCaisse());
 				System.out.println("equation ="+caisse.getSoldeCaisse()+"+"+montantVR+"="+montantcaisse);
@@ -667,7 +678,7 @@ public class ClientBean implements Serializable {
 			else 
 			{
 				
-				if(caisse.getSoldeCaisse()<montantVR)
+				if(caisse.getSoldeCaisse()< montantVR)
 				{
 					System.out.println("soldecaisse="+caisse.getSoldeCaisse());
 					System.out.println("montant a retirer"+montantVR);
@@ -689,7 +700,7 @@ public class ClientBean implements Serializable {
 
 					System.out.println("solde de caisse="+caisse.getSoldeCaisse());
 					
-					montantcaisse=daocaisse.retraitCaisse(loginFromSession,caisse.getSoldeCaisse(),montantVR);
+					montantcaisse=daocaisse.retraitCaisse(numCaisse,loginFromSession,caisse.getSoldeCaisse(),montantVR);
 					
 					System.out.println("solde caisse="+caisse.getSoldeCaisse());
 					System.out.println("equation ="+caisse.getSoldeCaisse()+"-"+montantVR+"="+montantcaisse);
@@ -708,6 +719,14 @@ public class ClientBean implements Serializable {
 		
 	}
 	
+
+	public int getNumCaisse() {
+		return numCaisse;
+	}
+
+	public void setNumCaisse(int numCaisse) {
+		this.numCaisse = numCaisse;
+	}
 
 	public void insertRemiseCheque()
 	{
