@@ -6,24 +6,68 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import com.iset.entités.*;
 
-import javax.naming.NamingException;
 
-import com.iset.Connexion.ConnexionJDBC;
+
+import com.iset.Connexion.ConnexionMYSQL;
 import com.iset.Connexion.ConnexionORACLE;
 
-public class Synchronisation {
+public class SynchronisationDao {
 	ConnexionORACLE oracle=new ConnexionORACLE();
-	ConnexionJDBC mysql=new ConnexionJDBC();
+	ConnexionMYSQL mysql=new ConnexionMYSQL();
 	
-	public void supprimerTables(String url) throws NamingException  
+	
+	
+	
+	public void supprimerOperation(String url)
 	{
 		String nocheck="SET FOREIGN_KEY_CHECKS=0;";
-		String deleteagence="DELETE FROM agence;";
+		String check=" SET FOREIGN_KEY_CHECKS=1;";
+		String dropoperation="DELETE FROM operation";
+		String dropverretrait="DELETE FROM versementretrait";
+		String autreop="DELETE FROM autreoperation";
+		String versement="DELETE FROM versement";
+		String retrait="DELETE FROM retrait";
+		String remiseC="DELETE FROM remisecheque";
+		String remiseE="DELETE FROM remiseeffet";
+		String virement="DELETE FROM virement";
+		String caisse="DELETE FROM caisse";
+		//suppression de la table agence
+	  
+		try 
+		{
+			mysql.Connexion(url).setAutoCommit(false) ;
+			
+			Statement statement = mysql.Connexion(url).createStatement();
+			statement.addBatch(nocheck);
+			
+			statement.addBatch(dropoperation);
+			statement.addBatch(autreop);
+			statement.addBatch(dropverretrait);
+			statement.addBatch(versement);
+			statement.addBatch(retrait);
+			statement.addBatch(remiseC);
+			statement.addBatch(remiseE);
+			statement.addBatch(virement);
+			statement.addBatch(caisse);
+			statement.addBatch(check);
+			
+			statement.executeBatch();
+		} 
+		catch (SQLException e) 
+		{
+			
+			e.printStackTrace();
+		}
+	}
+	public void supprimerTables(String url)  
+	{
+		String nocheck="SET FOREIGN_KEY_CHECKS=0;";
 		String check=" SET FOREIGN_KEY_CHECKS=1;";
 		String dropclient="DELETE FROM client";
 		String deleteevuti="DELETE FROM utilisateur";
-		String dropcaisse="DELETE FROM caisse";
+		String dropagence="DELETE FROM agence;";
 		String dropcompte="DELETE FROM compte";
 		//suppression de la table agence
 	  
@@ -33,11 +77,11 @@ public class Synchronisation {
 			
 			Statement statement = mysql.Connexion(url).createStatement();
 			statement.addBatch(nocheck);
-			statement.addBatch(deleteagence);
+			statement.addBatch(dropagence);
 			statement.addBatch(deleteevuti);
-			statement.addBatch(dropcaisse);
 			statement.addBatch(dropclient);
 			statement.addBatch(dropcompte);
+			
 			statement.addBatch(check);
 			
 			statement.executeBatch();
@@ -50,7 +94,7 @@ public class Synchronisation {
 	    
 	}
 
-	public void synchroniserClient(String url) throws NamingException 
+	public void synchroniserClient(String url)  
 	{
 		try
 		{
@@ -73,11 +117,8 @@ public class Synchronisation {
 		    	stinsert.setString(4, rsoracle.getString("NOM"));
 		    	stinsert.setString(5, rsoracle.getString("PRE"));
 		    	stinsert.setString(6, rsoracle.getString("AGE"));
-		    	int rowsAdded =stinsert.executeUpdate();
-		    	if (rowsAdded > 0) 
-			    {
-			        System.out.println(" added successfully client!");
-			    }
+		    	stinsert.executeUpdate();
+		    	
 		    }
 		}
 	    catch(SQLException ex)
@@ -87,8 +128,7 @@ public class Synchronisation {
 		
 	}
 	
-	
-	public void synchroniserAgence(String url) throws NamingException 
+	public void synchroniserAgence(String url)  
 	{
 		try
 		{
@@ -105,9 +145,8 @@ public class Synchronisation {
 		    {
 	    		stinsert.setString(1, rscount.getString("AGE"));
 		    	stinsert.setString(2, rscount.getString("LIB"));
-		    	int rowsAdded =stinsert.executeUpdate();
-		    	if(rowsAdded>0)
-		    	System.out.println("agence added with succes");
+		    	stinsert.executeUpdate();
+		    	
 		    }
 		    
 		}
@@ -117,13 +156,13 @@ public class Synchronisation {
 	    }
 	}
 
-	public void synchroniserEvuti(String url) throws NamingException 
+	public void synchroniserEvuti(String url) 
 	{
 		try
 		{
 			System.out.println("afficher utilisateur");
 			String sqlexistance="select * from EVUTI";
-			String requeteinsert="INSERT INTO utilisateur (login,cin,mail,nomprenom,password,puti,code_agenceFK) VALUES (?,?,?,?,?,?,?)";
+			String requeteinsert="INSERT INTO utilisateur (login,mail,nomprenom,password,puti,code_agenceFK) VALUES (?,?,?,?,?,?)";
 			
 			Statement storacle=oracle.Connexion().createStatement();
 		    ResultSet rsselect=storacle.executeQuery(sqlexistance);
@@ -131,28 +170,18 @@ public class Synchronisation {
 		    while(rsselect.next())
 		    {
 		    	stinsert.setString(1, rsselect.getString("CUTI"));
-		    	stinsert.setInt(2, 000000);
-		    	stinsert.setString(3, rsselect.getString("EMAIL"));
+		    	
+		    	stinsert.setString(2, rsselect.getString("EMAIL"));
 			  
-		    	stinsert.setString(4, rsselect.getString("LIB"));
+		    	stinsert.setString(3, rsselect.getString("LIB"));
 		    	
-		    	stinsert.setString(5, rsselect.getString("MDP"));
+		    	stinsert.setString(4, rsselect.getString("MDP"));
 		    	
-		    	stinsert.setString(6, rsselect.getString("PUTI"));
+		    	stinsert.setString(5, rsselect.getString("PUTI"));
 
-		    	stinsert.setString(7, rsselect.getString("AGE"));
-		    	int rowsAdded =stinsert.executeUpdate();
-		    	if (rowsAdded > 0) 
-			    {
-		    		
-			        System.out.println(" added successfully utilisateur!");
-			    }
-		    	/*System.out.println("cuti="+rsselect.getString("CUTI"));
-		    	System.out.println("mot de passe="+rsselect.getString("MDP"));
-		    	System.out.println("lib="+rsselect.getString("LIB"));*/
-		    	//cuti=rscount.getString("CUTI");
-		    	//mdp=rscount.getString("MDP");
-		    	//lib=rscount.getString("LIB");
+		    	stinsert.setString(6, rsselect.getString("AGE"));
+		    	stinsert.executeUpdate();
+		    	
 		    }
 		}
 	    catch(SQLException ex)
@@ -161,42 +190,43 @@ public class Synchronisation {
 	    }
 	}
 		
-	public void synchroniserCaisse(String url) throws NamingException 
+	public void synchroniserCaisse(String url)  
 	{
 		try
 		{
-			
 			String sqlexistance="select * from BKCAI";
-			String requeteinsert="INSERT INTO caisse(numerocaisse,soldeCaisse,code_agenceFK,code_utilisateurFK) VALUES (?,?,?,?)";
+			String requeteinsert="INSERT INTO caisse(numerocaisse,soldeCaisse,code_agenceFK,code_operationFK,code_utilisateurFK) VALUES (?,?,?,?,?)";
 			 
 		    PreparedStatement stinsert = mysql.Connexion(url).prepareStatement(requeteinsert);
 		    Statement storacle=oracle.Connexion().createStatement();
 		    ResultSet rscaisse=storacle.executeQuery(sqlexistance);
+		 
+			
+			
 		    while(rscaisse.next())
 		    {
-		    	
-		    	
-		    	stinsert.setString(1, rscaisse.getString("CAI"));
+				
+				stinsert.setString(1, rscaisse.getString("CAI"));
 		    	
 		    	stinsert.setDouble(2, rscaisse.getDouble("SJO"));
 		    	
 		    	stinsert.setString(3, rscaisse.getString("AGE"));
-			  
-		    	stinsert.setString(4, rscaisse.getString("CUTI"));
 		    	
-		    	int rowsAdded =stinsert.executeUpdate();
-		    	if (rowsAdded > 0) 
-			    {
-		    		System.out.println(rowsAdded);
-			        System.out.println(" added successfully caisse!");
-			    }
+		    	stinsert.setString(4, null);
+			  
+		    	stinsert.setString(5, rscaisse.getString("CUTI"));
+		    	
+		    	stinsert.executeUpdate();
+		    	
 		    	/*System.out.println("\n agence= "+rscaisse.getString("AGE"));
 		    	System.out.println("code caisse= "+rscaisse.getString("CAI"));
 		    	
 		    	System.out.println("date= "+rscaisse.getString("DOU"));
 		    	System.out.println("solde= "+rscaisse.getString("SJO"));
 		    	System.out.println("code utilisateur= "+rscaisse.getString("CUTI"));*/
+		    	//statement.addBatch(nocheck);
 		    }
+		  
 		}
 	    catch(SQLException ex)
 	    {
@@ -204,7 +234,7 @@ public class Synchronisation {
 	    }
 	}
 	
-	public void synchroniserCompte(String url) throws NamingException 
+	public void synchroniserCompte(String url) 
 	{
 		try
 		{
@@ -217,7 +247,7 @@ public class Synchronisation {
 		    Statement storacle=oracle.Connexion().createStatement();
 		    ResultSet rscompte=storacle.executeQuery(sqlexistance);
 		    /* Exécution d'une requête de lecture */
-			System.out.println(rscompte.next());
+			
 		    while((rscompte.next()))
 		    {
 		    	
@@ -235,13 +265,8 @@ public class Synchronisation {
 		    	
 		    	stinsert.setInt(7, rscompte.getInt("CLI"));
 			  
-		    	int rowsAdded =stinsert.executeUpdate();
+		    	stinsert.executeUpdate();
 		    	
-		    	if (rowsAdded > 0) 
-				    {
-			    		System.out.println(rowsAdded);
-				        System.out.println(" added successfully compte!");
-				    }
 		    }	
 		
 		}
@@ -251,7 +276,7 @@ public class Synchronisation {
 	    }
 	}
 	
-	public void updateAutorisation(String url)  throws NamingException 
+	public void updateAutorisation(String url)  
 	{
 		try 
 		{
@@ -270,13 +295,12 @@ public class Synchronisation {
 			
 			while (rsauto.next()) 
 			{
-				System.out.println(rsauto.getString("NCP"));
-				System.out.println(rsauto.getString("MAUT"));
+				
 				String updateauto="UPDATE compte set autorisation="
 				+rsauto.getDouble("MAUT")+"where codeCompte="+rsauto.getString("NCP");
 		
-				int x=stupdate.executeUpdate(updateauto);
-				System.out.println(x);
+				stupdate.executeUpdate(updateauto);
+				
 			}
 		} 
 		catch (SQLException e) 
@@ -287,67 +311,61 @@ public class Synchronisation {
 		
 	}
 
-	public void insertSynchro () throws NamingException 
+	
+	public void UpdateNonSynchro()
 	{
-		//String count="SELECT COUNT(*) FROM SYNCHRONISATION";
+		String update="UPDATE SYNCHRONISATION set ETAT='base non synchronisé'";
+		System.out.println(update);
+		Statement stupdate;
+		try {
+			stupdate = oracle.Connexion().createStatement();
+			int rows=stupdate.executeUpdate(update);
+		  	System.out.println(rows);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public void synchronnisationBase ()
+	{
+		String count="SELECT COUNT(*) AS count FROM synchronisation ";
 		String select="SELECT * FROM SYNCHRONISATION";
 		String x="";
 		try 
 		{
-			System.out.println("********************insert synchronisation***************************");
-			//calculer la taille de la table de synchro
-			/*Statement countSynchro=oracle.Connexion().createStatement();
 			
-			int rowsCount = countSynchro.executeUpdate(count);
-			if(rowsCount > 0)
-			{
-				System.out.println("count"+rowsCount);
-			}*/
-		String url="jdbc:mysql://localhost:3306/deltasecours)ag1";
 			Statement st=oracle.Connexion().createStatement();
 			
 			ResultSet rs=st.executeQuery(select);
-			
-			while (rs.next())
+			while(rs.next())
 			{
-				System.out.println("*****************insertion synchrnisation*********");
+				//rs.next();
+				
+				//System.out.println(rs.next());
 				String lib=rs.getString("LIBELLE_AGENCE");
 				String datasource_agence=rs.getString("DATASOURCE_AG");
-				 System.out.println(datasource_agence);
+				System.out.println("agence="+lib);
+				System.out.println("datasource recuperée="+datasource_agence);
 				
-				//for(int i=0 ; i< rowsCount ; i++)
-				//{
-					/* Création de l'objet gérant la requête */
-					
-					try{
 						supprimerTables(datasource_agence);
+						supprimerOperation(datasource_agence);
 						synchroniserAgence(datasource_agence);
 						synchroniserEvuti(datasource_agence);
-						synchroniserCaisse(datasource_agence);
 						synchroniserClient(datasource_agence);
 						synchroniserCompte(datasource_agence);
 						updateAutorisation(datasource_agence);
+						synchroniserCaisse(datasource_agence);
 						x="synchronisation effectué avec succes";
-						System.out.println(x);
-					}
-					catch(Exception e)
-					{
-						x="synchronisation non effectué";
-						System.out.println(x);
-
-					}
+						//System.out.println(x);
+					
 					
 			String update="UPDATE SYNCHRONISATION set ETAT='"+x+"' where LIBELLE_AGENCE='"+lib+"'";
 			System.out.println(update);
-			int rows=st.executeUpdate(update);
+			Statement stupdate=oracle.Connexion().createStatement();
+			int rows=stupdate.executeUpdate(update);
 			  	System.out.println(rows);
-				//}
-			  	
-		
 			}
-			
-			
-			
 		} catch (SQLException e) {
 			e.getMessage();
 			e.printStackTrace();
@@ -356,32 +374,41 @@ public class Synchronisation {
 	}
 
 	
-	public void selectSynchronisation () 
+	
+	public List<Synchronisation> selectSynchronisation () 
 	{
-		ArrayList listfam=null;
+		ArrayList<com.iset.entités.Synchronisation> listfam=new ArrayList<>();
 		//String count="SELECT COUNT(*) FROM SYNCHRONISATION";
 		String select="SELECT * FROM SYNCHRONISATION";
 		try 
 		{
-			
 			Statement stselect=oracle.Connexion().createStatement();
 			ResultSet rs=stselect.executeQuery(select);
-			System.out.println("before while");
+			//System.out.println("before while");
 			while (rs.next())
 			{
-				System.out.println("after while");
-				System.out.println("LIBELLE_AGENCE="+rs.getString("LIBELLE_AGENCE"));
-				System.out.println("DATASOURCE_AG="+rs.getString("DATASOURCE_AG"));
-				System.out.println("ETAT="+rs.getString("ETAT"));
+				com.iset.entités.Synchronisation s = new com.iset.entités.Synchronisation();
+				s.setDATASOURCE_AG(rs.getString("DATASOURCE_AG"));
+				s.setETAT(rs.getString("ETAT"));
+				s.setLIBELLE_AGENCE(rs.getString("LIBELLE_AGENCE"));
+				listfam.add(s);
+				//System.out.println("after while");
+				//System.out.println("LIBELLE_AGENCE="+rs.getString("LIBELLE_AGENCE"));
+				//System.out.println("DATASOURCE_AG="+rs.getString("DATASOURCE_AG"));
+				//System.out.println("ETAT="+rs.getString("ETAT"));
 				
 			}
 			
-			
+			return listfam;
 			
 		} catch (SQLException e) {
+			
 			e.getMessage();
 			e.printStackTrace();
+			return null;
 		} 
 		
 	}
+	
+	
 }

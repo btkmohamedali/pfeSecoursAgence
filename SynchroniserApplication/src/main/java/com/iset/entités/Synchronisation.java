@@ -1,9 +1,10 @@
 package com.iset.entités;
 
 public class Synchronisation {
-private String LIBELLE_AGENCE;
-private String ETAT;
-private String DATASOURCE_AG;
+	
+	private String LIBELLE_AGENCE;
+	private String ETAT;
+	private String DATASOURCE_AG;
 
 	public String getLIBELLE_AGENCE() {
 			return LIBELLE_AGENCE;

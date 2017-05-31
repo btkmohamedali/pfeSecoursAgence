@@ -1,24 +1,56 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.org/ui"> 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title> Menu </title>
+	<title>synchronisation</title>
 </h:head>
- 
-<h:body>
- <p:growl id="growl" sticky="true" showDetail="true"/>
-	
-	  <h:form>
-		   <p:commandButton  value="bouton synchro" action="#{mBean.synchro()}"></p:commandButton>
-		   <h1> la liste des Agences  </h1>
-	
-	
-	  </h:form>
-	  
-</h:body> 
-</html>
 
+<h:body>
+	<p:growl id="growl" sticky="true" showDetail="true" />
+	<h:form id="frm">
+
+		<center >
+		<p:fieldset  style="width:300px">
+			<p:commandButton value="Synchroniser Application" action="#{synchroBean.synchroniser}"  update="frm"
+			
+			onclick="PF('myDialogVar').show()"
+				oncomplete="PF('myDialogVar').hide()" />
+			
+		</p:fieldset>
+		</center>
+	
+	
+	<p:panel id="paneltable">
+		<h1>la liste des Agences</h1>
+		<p:dataTable var="s" id="synchrodatatable" value="#{synchroBean.syn}" border="2">
+			<p:column headerText="Libelle agence ">
+				<center>
+					<p:outputLabel value="#{s.LIBELLE_AGENCE}" />
+				</center>
+			</p:column>
+
+			<p:column headerText="etat">
+				<center>
+					<p:outputLabel value="#{s.ETAT}" />
+				</center>
+			</p:column>
+
+		</p:dataTable>
+		<p:dialog id="myDialogID" widgetVar="myDialogVar" modal="true"
+					draggable="false" closable="false" resizable="false"
+					showHeader="false">
+			<p:outputPanel>
+				<center>  
+					<p:graphicImage name="loading.gif" library="img"   />
+				</center>
+			</p:outputPanel>
+		</p:dialog>
+</p:panel>
+	
+</h:form>
+</h:body>
+</html>
