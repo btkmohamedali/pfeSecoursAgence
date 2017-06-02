@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PROCESS model-entity="JSFProcess"/>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#Authentification.xhtml"
+  PATH="/Authentification.xhtml" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#Authentification.xhtml:0" NAME="item"
+   PATH="/Authentification.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="Menu.xhtml::#Menu.xhtml" NAME="output"
+    PATH="/Menu.xhtml" TARGET="rules:#Menu.xhtml" TITLE="Menu.xhtml" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#Menu.xhtml" PATH="/Menu.xhtml"
+  SHAPE="240,33,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

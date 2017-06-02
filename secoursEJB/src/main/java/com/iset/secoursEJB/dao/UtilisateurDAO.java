@@ -19,7 +19,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.iset.secoursEJB.interfaces.UtilisateurImpl;
-import com.iset.secoursEJB.entities.Compte;
 import com.iset.secoursEJB.entities.Utilisateur;
 
 
@@ -42,28 +41,23 @@ public class UtilisateurDAO implements UtilisateurImpl,Serializable{
 	@Override
 	public boolean validateLogin(String log, String pass) 
 	{
-		
-			try {
+		try {
 		  //getSingleResult() 
 		  //Execute a SELECT query that returns a single untyped result.
-				Utilisateur logger = (Utilisateur) getEntityManager().createQuery("SELECT l FROM Utilisateur l WHERE l.login ='"+log+"' AND l.password ='"+ pass+"'").getSingleResult();
-			            
-			       if (logger != null)
-			       {
-			    	   System.out.println("found");
-			    	   return true;
-			       }		       
-			        		            
-			    } 
-			catch (NoResultException e)
-				    {
-			        	System.out.println("pas de resultat");
-			        	return false;
-			        }
-			       
-			return false;
+		Utilisateur login= (Utilisateur) getEntityManager().createQuery("SELECT l FROM Utilisateur l WHERE l.login ='"+log+"' AND l.password ='"+ pass+"'").getSingleResult();
+		if (login != null)
+		{
+			System.out.println("found");
 			
-		
+			return true;
+		}		       
+		} 
+	catch (NoResultException e)
+		{
+		System.out.println("pas de resultat");
+		return false;
+		}
+		return false;
 	}
 
 	@Override
@@ -152,17 +146,37 @@ public class UtilisateurDAO implements UtilisateurImpl,Serializable{
 	 
 	  }
 
+
+	
 	@Override
-	public boolean ajouterUtilisateur(Utilisateur u) {
-		try {
-		     getEntityManager().persist(u);
-			  return true;
-			
-		} catch (Exception e) {
-			
-			return false;
-		}
+	public Utilisateur findUser(String log,String password)
+	{
+	
+			  //getSingleResult() 
+			  //Execute a SELECT query that returns a single untyped result.
+			String requete=" SELECT l "
+					+ " FROM Utilisateur l"
+					+ " WHERE  l.login=:log"
+					+ " AND l.password=:password";
+			Utilisateur us=(Utilisateur) getEntityManager().createQuery(requete).setParameter("log", log).setParameter("password", password).getSingleResult();
+			return  us;
+				
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Utilisateur> findUserByAgence(int code_agence)
+	{
+		//getSingleResult() 
+		//Execute a SELECT query that returns a single untyped result.
+		String requete=" SELECT l "
+					+ " FROM Utilisateur l"
+					+ " WHERE  l.agence.codeAgence=:code_agence";
+	Query query=getEntityManager().createQuery(requete).setParameter("code_agence", code_agence);
+	return query.getResultList();
+				
+	}
+
+	
 	
 	
 }

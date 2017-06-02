@@ -9,102 +9,80 @@
 	<title>Liste versement</title>
 </h:head> 
 <h:body>
-<f:view>
-<h:form>
+<f:view>  <h:form>
 		    <p:menubar>
-		       
-		     <p:submenu label="Operation" icon="ui-icon-document">
-		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+		        <p:submenu label="Operation" icon="ui-icon-document">
+		         	
 				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
 				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
 				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
 				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
-				    </p:submenu>
-				     
-		         	<p:submenu label="Lists" icon="ui-icon-contact">
-		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
-				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
-				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
-				         
-				    </p:submenu>
-		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
-							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
-							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
-							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
-							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
-							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
-					</p:submenu>
-		          <p:separator />
-		          <p:menuitem value="Quit" url="Authentification.xhtml" />
-		        </p:submenu>
-		 		
+				          <p:separator />
+				          <p:menuitem value="Quit" url="Authentification.xhtml" />
+				</p:submenu>
+ 				 <p:submenu label="Listes" icon="ui-icon-document">    
+		         	
+		         		 <p:menuitem id="Liste_Agence" value="Liste Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="Liste_Comptes" value="Liste Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="Liste Client" url="ListClient.xhtml" />
+				  
+				  </p:submenu>
+				  <p:submenu label="ListesOp" icon="ui-icon-document" rendered="#{authentificationBean.chef}"> 
+		          	
+							 <p:menuitem id="Liste_Retrait" value="Liste Retrait" url="ListRetrait.xhtml" />
+							 <p:menuitem id="Liste_Versement" value="Liste Versement" url="ListVersement.xhtml" />
+							 <p:menuitem id="Liste_Virement" value="Liste Virement" url="ListVirement.xhtml" />
+							 <p:menuitem id="Liste_RC" value="Liste Remise Cheque" url="ListRemiseCheque.xhtml" />
+							 <p:menuitem id="Liste_RE" value="Liste Remise Effet" url="ListRemiseEffet.xhtml" />
+				</p:submenu>
+		        <p:submenu label="Côntrole chef agence" icon="ui-icon-contact" rendered="#{authentificationBean.chef}" >
+		          	<p:menuitem id="controlecaisse" value="Contrôle caisses" url="ControleCaisse.xhtml"  />
+		          	<p:menuitem id="controleop" value="Contrôle operation" url="ControleOperation.xhtml" />
+		         </p:submenu>
+		   
+		  		<p:menuitem value="Quit" url="Authentification.xhtml" icon="ui-icon-close" />
 		 		<f:facet name="options">
-		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.nomprenom}"  icon="ui-icon-home" />
 		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
 		        </f:facet>
 		    </p:menubar>
+		    
 	  </h:form>
 	  <p:panel id="title">
-	  	  		<h1> la liste de  versement </h1>
-	  
+	  	<center>
+	  		<h2> la liste des  versements </h2>
+	  	</center>
 	
-	
-	<p:dataTable var="versement" id="dataTable" value="#{clientBean.findAllVersement()}" border="2">
+	<p:dataTable var="versement" id="dataTable" value="#{transactioinBean.findAllVersement()}" border="2">
 		
-		<p:column style="width:60px">
+		<p:column headerText="client" style="width:60px">
 			<center>
-				<f:facet name="header">
-				<p:outputLabel value="Client" />
-				</f:facet>
-					<h:outputLabel  value="#{versement.client.codeClient}"/>
+				<h:outputLabel  value="#{versement.client.codeClient}"/>
 			</center>
 		</p:column>
 		
-		<p:column style="width:80px">
+		<p:column headerText="code Compte" style="width:80px">
 			<center>
-				<f:facet name="header">
-				<p:outputLabel value="code Compte" />
-				</f:facet>
-					<h:outputLabel  value="#{versement.compte.codeCompte}"/>
+				<h:outputLabel  value="#{versement.compte.codeCompte}"/>
 			</center>
 		</p:column>
 		
-		<p:column style="width:200px">
+		<p:column headerText="Date" style="width:130px">
 			<center>
-				<f:facet name="header">
-				<p:outputLabel value="Date" />
-				</f:facet>
-					<h:outputLabel  value="#{versement.date}"/>
+				<h:outputLabel  value="#{versement.date}"/>
 			</center>
 		</p:column>
 		
-		<p:column style="width:60px">
+		<p:column headerText="Montant" style="width:50px">
 			<center>
-				<f:facet name="header">
-				<p:outputLabel value="Montant" />
-				</f:facet>
-					<h:outputLabel  value="#{versement.montant}"/>
+				<h:outputLabel  value="#{versement.montant}"/>
 			</center>
 		</p:column>
 		
 		
-		
-		<p:column style="width:80px">
+		<p:column headerText="Motif" style="width:150px">
 			<center>
-				<f:facet name="header">
-				<p:outputLabel value="utilisateur" />
-				</f:facet>
-					<h:outputLabel  value="#{versement.utilisateur.login}"/>
-			</center>
-		</p:column>
-		
-		
-		<p:column>
-			<center>
-				<f:facet name="header">
-				<p:outputLabel value="Motif" />
-				</f:facet>
-					<h:outputLabel  value="#{versement.motif}"/>
+				<h:outputLabel  value="#{versement.motif}"/>
 			</center>
 		</p:column>
 	</p:dataTable>

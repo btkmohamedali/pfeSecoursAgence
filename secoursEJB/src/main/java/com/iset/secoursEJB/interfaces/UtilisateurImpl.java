@@ -18,7 +18,9 @@ public interface UtilisateurImpl {
 	public List<String> findAllEmail();
 	public List<String> findAllMDPUsers();
 	public void Mail(String email,List<String> MDPUsers);
-	public boolean ajouterUtilisateur(Utilisateur u);
+	
+	Utilisateur findUser(String log, String password);
+	List<Utilisateur> findUserByAgence(int code_agence);
 	
 	
 }

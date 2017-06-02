@@ -11,50 +11,51 @@
  
 <h:body>
  <p:growl id="growl" sticky="true" showDetail="true"/>
-	
-	  <h:form>
+	   <h:form>
 		    <p:menubar>
-		       
-		        
-		         <p:submenu label="Operation" icon="ui-icon-document">
-		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+		        <p:submenu label="Operation" icon="ui-icon-document">
+		         	
 				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
 				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
 				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
 				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
-				    </p:submenu>
-				     
-		         	<p:submenu label="Lists" icon="ui-icon-contact">
-		         		 <p:menuitem id="List_caisse" value="List caisse" url="Listcaisse.xhtml"  />
-				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
-				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
-				         
-				    </p:submenu>
-		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
-							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
-							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
-							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
-							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
-							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
-					</p:submenu>
-		          	<p:submenu>
-		          		 <p:menuitem id="synchro" value="synchronisation" url="AffichageMotDePasse.xhtml" />
-		          	</p:submenu>
-		          <p:separator />
-		          <p:menuitem value="Quit" url="Authentification.xhtml" />
-		        </p:submenu>
-		 		
+				          <p:separator />
+				          <p:menuitem value="Quit" url="Authentification.xhtml" />
+				</p:submenu>
+ 				 <p:submenu label="Listes" icon="ui-icon-document">    
+		         	
+		         		 <p:menuitem id="Liste_Agence" value="Liste Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="Liste_Comptes" value="Liste Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="Liste Client" url="ListClient.xhtml" />
+				  
+				  </p:submenu>
+				  <p:submenu label="ListesOp" icon="ui-icon-document" rendered="#{authentificationBean.chef}"> 
+		          	
+							 <p:menuitem id="Liste_Retrait" value="Liste Retrait" url="ListRetrait.xhtml" />
+							 <p:menuitem id="Liste_Versement" value="Liste Versement" url="ListVersement.xhtml" />
+							 <p:menuitem id="Liste_Virement" value="Liste Virement" url="ListVirement.xhtml" />
+							 <p:menuitem id="Liste_RC" value="Liste Remise Cheque" url="ListRemiseCheque.xhtml" />
+							 <p:menuitem id="Liste_RE" value="Liste Remise Effet" url="ListRemiseEffet.xhtml" />
+				</p:submenu>
+		        <p:submenu label="Côntrole chef agence" icon="ui-icon-contact" rendered="#{authentificationBean.chef}" >
+		          	<p:menuitem id="controlecaisse" value="Contrôle caisses" url="ControleCaisse.xhtml"  />
+		          	<p:menuitem id="controleop" value="Contrôle operation" url="ControleOperation.xhtml" />
+		         </p:submenu>
+		   
+		  		<p:menuitem value="Quit" url="Authentification.xhtml" icon="ui-icon-close" />
 		 		<f:facet name="options">
-		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.nomprenom}"  icon="ui-icon-home" />
 		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
 		        </f:facet>
 		    </p:menubar>
-	  </h:form>
+	
+		   
+	<p:panel>  
 	  	 	
 	 
-	  	<div style="margin : 0 auto;width:100%;text-align: center;margin-left:400px;margin-top:100px">
+	  	<div style="margin : 0 auto;width:100%;text-align: center;margin-left:400px;margin-top:50px;margin-bottom:50px">
 	  	<p:fieldset legend="Operations Effectuées"  style="width:500px">
-		 	<p:panelGrid id="panelOperation" columns="2" style="font-size:18px;">
+		 	<p:panelGrid id="panelOperation" columns="2" style="font-size:18px;width:500px;">
 			  	<p:outputLabel value="Nombre de retrait"></p:outputLabel>
 			  	<p:outputLabel value="#{operationBean.countRetrait()}"/>
 			  	
@@ -72,7 +73,7 @@
 		  </p:panelGrid>
 	 </p:fieldset>
 	 </div>
-	  
-	
+	  </p:panel>
+	</h:form>
 </h:body> 
 </html>

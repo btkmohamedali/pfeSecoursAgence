@@ -15,7 +15,7 @@
 			<p:graphicImage name="btklogo.png" library="img"   />
 			
 		</center>
-		<h:form>
+		<h:form id="loginform">
 			<div style="margin : 0 auto;width:100%;text-align: center;margin-left:400px;">
 			<p:fieldset legend="Login" style="width:50px">
 			<center>
@@ -30,7 +30,16 @@
 			</p:panelGrid>	
 			
 				
-					<p:commandButton id="login" value="Valider"  icon="ui-icon-check" action="#{authentificationBean.envoie()}" style="margin-top:10px;"/>
+					<p:commandButton id="login" value="Valider" update="loginform" icon="ui-icon-check" action="#{authentificationBean.envoie()}" style="margin-top:10px;"/>
+					
+ 
+			    <p:commandButton value="Secret"  onclick="PF('dlg1').show();" />
+			 
+				 <p:dialog header="Inserez code secret" widgetVar="dlg1" minHeight="40">
+				      <p:inputText value="#{authentificationBean.code}"  />
+				      <p:commandButton  value="ok"  icon="ui-icon-home" action="#{authentificationBean.validateSecret}" />
+				</p:dialog>
+				
 			</center>
 			</p:fieldset>
 			</div>

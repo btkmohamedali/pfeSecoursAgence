@@ -34,9 +34,9 @@ import com.iset.secoursEJB.interfaces.RemiseEffetImpl;
 import com.iset.secoursEJB.interfaces.RetraitImpl;
 
 @SuppressWarnings("serial")
-@ManagedBean(name="clientBean")
+@ManagedBean(name="transactionBean")
 @SessionScoped
-public class ClientBean implements Serializable {
+public class TransactionBean implements Serializable {
 
 	@EJB
 	private CaisseImpl daocaisse;
@@ -79,24 +79,35 @@ public class ClientBean implements Serializable {
 	private Utilisateur login=new Utilisateur();
 	private Operation operation=new Operation();
 	private long numCompte;
-	public int numCompteBeneficiaire;
+	private long numCompteBeneficiaire;
 	private String type_operation;
 	private String clientinoutBTK;
 	private double solde; 
-	public double soldeBeneficiaire;
-	public String username;
-	public double montantVR;
-	public int numCheque;
+	private double soldeBeneficiaire;
+	private String username;
+	private double montantVR;
+	private int numCheque;
 	private int codeClient;
-	public int codeBeneficiaire;
-	public String rib_Beneficiaire;
-	public String radioValue;
-	public String motif;
-	public long numEffet ;
-	public int numCaisse;
-	public Date date=new  Date();
+	private int codeBeneficiaire;
+	private String rib_Beneficiaire;
+	private String radioValue;
+	private String motif;
+	private long numEffet ;
+	private int numCaisse;
+	private Date date=new  Date();
 	String loginFromSession = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("login");
+	private boolean acaisse=true;
 
+	private CaisseBean c = new CaisseBean();
+	
+	public boolean isAcaisse() {
+		acaisse = c.getListeCaisses().size()!=0;
+		return acaisse;
+	}
+
+	public void setAcaisse(boolean acaisse) {
+		this.acaisse = acaisse;
+	}
 
 	public Agence getAgence() {
 		return agence;
@@ -178,11 +189,11 @@ public class ClientBean implements Serializable {
 		this.soldeBeneficiaire = soldeBeneficiaire;
 	}
 
-	public int getNumCompteBeneficiaire() {
+	public long getNumCompteBeneficiaire() {
 		return numCompteBeneficiaire;
 	}
 
-	public void setNumCompteBeneficiaire(int numCompteBeneficiaire) {
+	public void setNumCompteBeneficiaire(long numCompteBeneficiaire) {
 		this.numCompteBeneficiaire = numCompteBeneficiaire;
 	}
 
@@ -223,7 +234,7 @@ public class ClientBean implements Serializable {
 	{
 		try 
 		{
-			System.out.println("cinClient="+client.getNID());
+			System.out.println("cinClient="+client.getNID().replace(" ", ""));
 			if((client.getNID()==null))
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "inserer un numero de cin");
@@ -256,7 +267,8 @@ public class ClientBean implements Serializable {
 	{
 		try 
 		{
-			if(client.getNID()==clientBeneficiaire.getNID())
+			System.out.println("clt1="+client.getNID()+"clt2="+clientBeneficiaire.getNID());
+			if((client.getNID().replace("", "").equals(clientBeneficiaire.getNID().replace("", ""))))
 			{
 				
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Cin identique  ");
@@ -284,7 +296,7 @@ public class ClientBean implements Serializable {
 		} 
 		catch (Exception e) 
 		{
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", " client Beneficiaire NOT FOUND Please try again!!");
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", " NID NOT FOUND Please try again!!");
 			RequestContext.getCurrentInstance().update("growl");
 			FacesContext context=FacesContext.getCurrentInstance();
 			context.addMessage(null, message);	
@@ -410,7 +422,7 @@ public class ClientBean implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ClientBean other = (ClientBean) obj;
+		TransactionBean other = (TransactionBean) obj;
 		if (client == null) {
 			if (other.client != null)
 				return false;
@@ -545,8 +557,8 @@ public class ClientBean implements Serializable {
 		 //login user
 		System.out.println("ussre="+loginFromSession);	
 		 login.setLogin(loginFromSession);
-			retrait.setUtilisateur(login); 	
-		 System.out.println("login="+retrait.getUtilisateur().getLogin());
+			caisse.setUtilisateur(login); 	
+		// System.out.println("login="+retrait.getUtilisateur().getLogin());
 		
 	}
 
@@ -583,23 +595,24 @@ public class ClientBean implements Serializable {
 		 //login user
 		 System.out.println("ussre="+loginFromSession);	
 		 login.setLogin(loginFromSession);
-		 versement.setUtilisateur(login); 	
-		 System.out.println("login="+versement.getUtilisateur().getLogin());
+		 caisse.setUtilisateur(login); 	
+		// System.out.println("login="+versement.getUtilisateur().getLogin());
 		
 	}
 	
 	double montantcaisse=0;
-	
+	Caisse caisse=new Caisse();
+
 	
 	public void operationChoisi()
 	{
 		System.out.println("numero caisse" +numCaisse);
 		System.out.println("login user"+loginFromSession);
-		Caisse caisse=daocaisse.findCaisseByLoginCode(loginFromSession,numCaisse);
 		System.out.println("******** donnees caisse********");
+		caisse=daocaisse.findCaisseByLoginCode(loginFromSession, numCaisse);
 		System.out.println("numero caisse"+caisse.getNumerocaisse());
 		System.out.println("solde caisse"+caisse.getSoldeCaisse());
-		System.out.println("code user"+caisse.getUtilisateur().getLogin());
+		//System.out.println("code user"+caisse.getUtilisateur().getLogin());
 		System.out.println("**********************************");
 		System.out.println("retrait/versement");
 		System.out.println("typeop="+type_operation);
@@ -643,6 +656,7 @@ public class ClientBean implements Serializable {
 				System.out.println(" montant versé="+compte.getSolde()+"+"+montantVR+"="+montant);
 				setSolde(montant);
 				System.out.println("solde updated="+getSolde());
+				Caisse caisse=daocaisse.findCaisseByLoginCode(loginFromSession,numCaisse);
 				System.out.println("solde de caisse before ="+caisse.getSoldeCaisse());
 				System.out.println("numero caisse"+numCaisse);
 				montantcaisse=daocaisse.versementCaisse(numCaisse,loginFromSession,caisse.getSoldeCaisse(),montantVR);
@@ -650,9 +664,17 @@ public class ClientBean implements Serializable {
 				System.out.println("solde caisse after="+caisse.getSoldeCaisse());
 				System.out.println("equation ="+caisse.getSoldeCaisse()+"+"+montantVR+"="+montantcaisse);
 				caisse.setSoldeCaisse(montantcaisse);
+				
 				daocaisse.updateCaisse(caisse);
+
 				addVersement();
 				this.insertVersement();
+
+				
+				System.out.println("code versement="+versement.getCodeOperation());
+
+				caisse.setOperations(versement);
+				daocaisse.updateCaisse(caisse);
 				Clear();
 			
 			
@@ -706,6 +728,10 @@ public class ClientBean implements Serializable {
 					daocaisse.updateCaisse(caisse);
 					addRetrait();
 					this.insertRetrait();
+					System.out.println("code retrait="+retrait.getCodeOperation());
+
+					caisse.setOperations(retrait);
+					daocaisse.updateCaisse(caisse);
 					Clear();
 				}
 				
@@ -825,7 +851,7 @@ public class ClientBean implements Serializable {
 	 	//login user
 	 	login.setLogin(loginFromSession);
 		remiseCheque.setUtilisateur(login); 
-	 	System.out.println("login="+remiseCheque.getUtilisateur().getLogin());
+	 	//System.out.println("login="+remiseCheque.getUtilisateur().getLogin());
 	 	
 		
 		System.out.println("remise Cheque autre banque effectue with success");
@@ -871,9 +897,9 @@ public class ClientBean implements Serializable {
 		 	remiseCheque.setCodeClt(codeB);
 	 	
 		 //num Compte beneficiaire
-		 	int numB=remiseCheque.getCodeCpte();
+		 	long numB=remiseCheque.getCodeCpte();
 		 	System.out.println(numB);
-		 	int numCompteB=getNumCompteBeneficiaire();
+		 	long numCompteB=getNumCompteBeneficiaire();
 		 	numB=numCompteB;
 		 	System.out.println(" code compte beneficiaire="+numB);
 		 	remiseCheque.setCodeCpte(numB);
@@ -900,7 +926,7 @@ public class ClientBean implements Serializable {
 		int lengthnumCheque = (String.valueOf(numCheque)).length();
 
 		System.out.println("remise cheque");
-		System.out.println("taille numero cheque"+lengthnumCheque);
+		System.out.println("taille numero cheque="+lengthnumCheque);
 		
 		if((montantVR==0)||(numCheque==0)||(radioValue==null))
 		{
@@ -958,12 +984,12 @@ public class ClientBean implements Serializable {
 				//compte beneficiaire
 				System.out.println("compte beneficiaire");
 				double montantB=0;
-				System.out.println("montant à verser par cheque au beneficiaire ="+montant);
+				System.out.println("montant à verser par cheque au beneficiaire ="+montantVR);
 				System.out.println("numCompteBeneficiaire"+getNumCompteBeneficiaire());
 				System.out.println(compteBeneficiaire.getSolde());
-				System.out.println("montantversé"+montant);
-				montantB=daocompte.versement(getNumCompteBeneficiaire(),compteBeneficiaire.getSolde(),montant);
-				System.out.println(" montant versé="+compteBeneficiaire.getSolde()+"+"+montant+"="+montantB);
+				System.out.println("montantversé"+montantVR);
+				montantB=daocompte.versement(getNumCompteBeneficiaire(),compteBeneficiaire.getSolde(),montantVR);
+				System.out.println(" montant versé="+compteBeneficiaire.getSolde()+"+"+montantVR+"="+montantB);
 				System.out.println("motant"+montantB);
 				compteBeneficiaire.setSolde(montantB);
 				daocompte.updateCompte(compteBeneficiaire);
@@ -1071,7 +1097,7 @@ public class ClientBean implements Serializable {
 	 	//login user
 	 	login.setLogin(loginFromSession);
 		remiseEffet.setUtilisateur(login); 
-	 	System.out.println("login="+remiseEffet.getUtilisateur().getLogin());
+	 	//System.out.println("login="+remiseEffet.getUtilisateur().getLogin());
 	 	
 		
 		System.out.println("remise Effet autre banque effectue with success");
@@ -1117,9 +1143,9 @@ public class ClientBean implements Serializable {
 		 	remiseEffet.setCodeClt(codeB);
 	 	
 		 //num Compte beneficiaire
-		 	int numB=remiseEffet.getCodeCpte();
+		 	long numB=remiseEffet.getCodeCpte();
 		 	System.out.println(numB);
-		 	int numCompteB=getNumCompteBeneficiaire();
+		 	long numCompteB=getNumCompteBeneficiaire();
 		 	numB=numCompteB;
 		 	System.out.println(" code compte beneficiaire="+numB);
 		 	remiseEffet.setCodeCpte(numB);
@@ -1205,9 +1231,9 @@ public class ClientBean implements Serializable {
 				System.out.println("montant à verser par cheque au beneficiaire ="+montant);
 				System.out.println("numCompteBeneficiaire"+getNumCompteBeneficiaire());
 				System.out.println(compteBeneficiaire.getSolde());
-				System.out.println("montantversé"+montant);
-				montantB=daocompte.versement(getNumCompteBeneficiaire(),compteBeneficiaire.getSolde(),montant);
-				System.out.println(" montant versé="+compteBeneficiaire.getSolde()+"+"+montant+"="+montantB);
+				System.out.println("montantversé"+montantVR);
+				montantB=daocompte.versement(getNumCompteBeneficiaire(),compteBeneficiaire.getSolde(),montantVR);
+				System.out.println(" montant versé="+compteBeneficiaire.getSolde()+"+"+montantVR+"="+montantB);
 				System.out.println("motant"+montantB);
 				compteBeneficiaire.setSolde(montantB);
 				daocompte.updateCompte(compteBeneficiaire);
@@ -1304,7 +1330,7 @@ public class ClientBean implements Serializable {
 			 	//login user
 			 	login.setLogin(loginFromSession);
 				virement.setUtilisateur(login); 
-			 	System.out.println("login="+virement.getUtilisateur().getLogin());
+			 	//System.out.println("login="+virement.getUtilisateur().getLogin());
 			 	
 				
 				System.out.println("virement autre banque effectue with success");
@@ -1342,9 +1368,9 @@ public class ClientBean implements Serializable {
 				 	virement.setCodeClt(codeB);
 			 	
 				 //num Compte beneficiaire
-				 	int numB=virement.getCodeCpte();
+				 	long numB=virement.getCodeCpte();
 				 	System.out.println(numB);
-				 	int numCompteB=getNumCompteBeneficiaire();
+				 	long numCompteB=getNumCompteBeneficiaire();
 				 	numB=numCompteB;
 				 	System.out.println(" code compte beneficiaire="+numB);
 				 	virement.setCodeCpte(numB);
@@ -1369,9 +1395,8 @@ public class ClientBean implements Serializable {
 			{
 				double montant=0;
 				double autosolde=compte.getAutorisation()+compte.getSolde();
-				long lengthnumEffet = (String.valueOf(numEffet)).length();
-				System.out.println("remise cheque");
-				System.out.println("taille numero cheque"+lengthnumEffet);
+				
+				
 				
 				if((montantVR==0)||(radioValue==null))
 				{
@@ -1420,12 +1445,12 @@ public class ClientBean implements Serializable {
 						//compte beneficiaire
 						System.out.println("compte beneficiaire");
 						double montantB=0;
-						System.out.println("montant à verser par cheque au beneficiaire ="+montant);
+						System.out.println("montant à verser  au beneficiaire ="+montantVR);
 						System.out.println("numCompteBeneficiaire"+getNumCompteBeneficiaire());
 						System.out.println(compteBeneficiaire.getSolde());
-						System.out.println("montantversé"+montant);
-						montantB=daocompte.versement(getNumCompteBeneficiaire(),compteBeneficiaire.getSolde(),montant);
-						System.out.println(" montant versé="+compteBeneficiaire.getSolde()+"+"+montant+"="+montantB);
+						System.out.println("montantversé"+montantVR);
+						montantB=daocompte.versement(getNumCompteBeneficiaire(),compteBeneficiaire.getSolde(),montantVR);
+						System.out.println(" montant versé="+compteBeneficiaire.getSolde()+"+"+montantVR+"="+montantB);
 						System.out.println("motant"+montantB);
 						compteBeneficiaire.setSolde(montantB);
 						daocompte.updateCompte(compteBeneficiaire);
@@ -1435,7 +1460,6 @@ public class ClientBean implements Serializable {
 						
 						addVirementClientsBTK();
 						this.insertVirement();
-						
 						Clear();	
 					}
 						
@@ -1468,17 +1492,19 @@ public class ClientBean implements Serializable {
 						}
 						else
 						{
-						//compte client
-						System.out.println("montant à retirer par cheque="+montantVR);
-						System.out.println("numCompte"+getNumCompte());
-						System.out.println(compte.getSolde());
-						System.out.println("montantversé"+montantVR);
-						compte.setSolde(montant);
+						
 						
 						
 						addVirementAutreBanque();
 						this.insertVirement();
-						Clear();
+						client=new Client();
+						compte=new Compte();
+						
+						numCompteBeneficiaire=0;
+						radioValue=null;
+						montantVR=0;
+						rib_Beneficiaire="";
+						RequestContext.getCurrentInstance().reset("frm1");
 					}
 					}
 					
@@ -1495,57 +1521,37 @@ public class ClientBean implements Serializable {
 		
 		System.out.println("clearing");
 		
+		client=new Client();
 		
+		compte=new Compte();
+		agence=new Agence();
+		caisse=new Caisse();
+		montantVR=0;
+		motif=null;
+		numCaisse=0;
+		numCompte=0;
+		type_operation="";
+		numCheque=0;
+		numEffet=0;
 		
-		System.out.println("cin avant "+client.getNID());
-		client.setNID(null);
-		System.out.println("cin apres"+client.getNID());
-		client.setNom(null);
-		client.setCodeClient(0);
-		setNumCompte(0);
-		setCodeBeneficiaire(0);
-		client.setCodeClient(0);
-		compte.setSolde(0);
-		compte.setAutorisation(0);
-		compte.setAgence(null);
+		client=new Client();
+		clientBeneficiaire=new Client();
+		compteBeneficiaire=new Compte();
+		numCompte=0;
+		motif=null;
+		radioValue=null;
 		
-		System.out.println(type_operation);
+		numCompteBeneficiaire=0;
+		radioValue=null;
 		
-		System.out.println(motif);
-		setMotif(null);
-		setMontantVR(0);
-		
-		compte.setSolde(0);
-		
-	}
-	
-	
-	
-	public void mail()
-	{
-		List<String> emails =daologin.findAllEmail();
-		
-		List<String> MDPUsers =daologin.findAllMDPUsers();
-		try
-		{
-			for(String email : emails)
-				{
-					daologin.Mail(email,MDPUsers);
-				}
-			FacesMessage message = new FacesMessage(FacesMessage.FACES_MESSAGES, "email envoyé");
-			RequestContext.getCurrentInstance().update("growl");
-			FacesContext context=FacesContext.getCurrentInstance();
-			context.addMessage(null, message);
-		}
-		catch (Exception e)
-	    {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Erreur", "email non envoyé");
-			RequestContext.getCurrentInstance().update("growl");
-			FacesContext context=FacesContext.getCurrentInstance();
-			context.addMessage(null, message);
-        }
+		;
+		RequestContext.getCurrentInstance().reset("frm1");
 		
 	}
+	
+	
+	
+
 	
 	
 }

@@ -8,7 +8,7 @@
       >
 
 <h:head>
-	<title>Remise Cheque </title>
+	<title>Remise Effet </title>
 		
 	<style>
 		.ui-panelgrid>*>tr, .ui-panelgrid .ui-panelgrid-cell
@@ -21,43 +21,49 @@
 	<p:growl id="growl" sticky="true" showDetail="true" autoUpdate="true" closable="true"  />
 	
 	<!-- menu -->
-	<h:form>
+	  	  <h:form id="frm1">
 		    <p:menubar>
-		         <p:submenu label="Operation" icon="ui-icon-document">
-		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
+		        <p:submenu label="Operation" icon="ui-icon-document">
+		         	
 				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
 				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
 				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
 				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
-				    </p:submenu>
-				     
-		         	<p:submenu label="Lists" icon="ui-icon-contact">
-		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
-				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
-				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
-				         
-				    </p:submenu>
-		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
-							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
-							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
-							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
-							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
-							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
-					</p:submenu>
-		          <p:separator />
-		          <p:menuitem value="Quit" url="Authentification.xhtml" />
-		        </p:submenu>
-		 		
+				          <p:separator />
+				          <p:menuitem value="Quit" url="Authentification.xhtml" />
+				</p:submenu>
+ 				 <p:submenu label="Listes" icon="ui-icon-document">    
+		         	
+		         		 <p:menuitem id="Liste_Agence" value="Liste Agence" url="ListAgence.xhtml"  />
+				          <p:menuitem id="Liste_Comptes" value="Liste Compte" url="ListCompte.xhtml"  />
+				          <p:menuitem id="Liste_Clients" value="Liste Client" url="ListClient.xhtml" />
+				  
+				  </p:submenu>
+				  <p:submenu label="ListesOp" icon="ui-icon-document" rendered="#{authentificationBean.chef}"> 
+		          	
+							 <p:menuitem id="Liste_Retrait" value="Liste Retrait" url="ListRetrait.xhtml" />
+							 <p:menuitem id="Liste_Versement" value="Liste Versement" url="ListVersement.xhtml" />
+							 <p:menuitem id="Liste_Virement" value="Liste Virement" url="ListVirement.xhtml" />
+							 <p:menuitem id="Liste_RC" value="Liste Remise Cheque" url="ListRemiseCheque.xhtml" />
+							 <p:menuitem id="Liste_RE" value="Liste Remise Effet" url="ListRemiseEffet.xhtml" />
+				</p:submenu>
+		        <p:submenu label="Côntrole chef agence" icon="ui-icon-contact" rendered="#{authentificationBean.chef}" >
+		          	<p:menuitem id="controlecaisse" value="Contrôle caisses" url="ControleCaisse.xhtml"  />
+		          	<p:menuitem id="controleop" value="Contrôle operation" url="ControleOperation.xhtml" />
+		         </p:submenu>
+		   
+		  		<p:menuitem value="Quit" url="Authentification.xhtml" icon="ui-icon-close" />
 		 		<f:facet name="options">
-		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
+		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.nomprenom}"  icon="ui-icon-home" />
 		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
 		        </f:facet>
 		    </p:menubar>
-	  </h:form>
+		    
+	 
 	<p:panel>
-		<h:form>
+		
 			<center>
-				<h3>Operation Remise Cheque</h3>
+				<h3>Operation Remise Effet</h3>
 			</center>
 	<center>
 			<table>
@@ -72,38 +78,38 @@
 						<p:separator/>
 					
 					<p:panelGrid id="panelClientsComptes" columns="2" cellpadding="10">
-						<p:inputText value="#{clientBean.client.NID}" required="true" requiredMessage="veuillez inserer cin">
-							<pe:keyFilter regEx="/[0-9]/i" />
+						<p:inputText value="#{transactionBean.client.NID}" >
+							
 						</p:inputText>
 					
 					
-				<p:commandButton value="Valider" action="#{clientBean.findClientByCIN()}"
+				<p:commandButton value="Valider" action="#{transactionBean.findClientByCIN()}"
 					update="listClient,code_Client,panelClient" />
 					
 				<p:outputLabel value="Code" />
-				<p:inputText id="code_Client" value="#{clientBean.codeClient}" readonly="true" />
+				<p:inputText id="code_Client" value="#{transactionBean.codeClient}" readonly="true" />
 				
 					<p:outputLabel value=" Liste des comptes "></p:outputLabel>
-					<p:selectOneMenu id="listClient" value="#{clientBean.numCompte}">
+					<p:selectOneMenu id="listClient" value="#{transactionBean.numCompte}">
 					<f:selectItem itemLabel="Select..." noSelectionOption="true" />
-					<f:selectItems value="#{clientBean.listeComptes}"
+					<f:selectItems value="#{transactionBean.listeComptes}"
 							var="item" itemLabel="#{item.type_compte}"
 							itemValue="#{item.codeCompte}">
 					</f:selectItems>
 					</p:selectOneMenu>
-					<p:commandButton value="Afficher" action="#{clientBean.searchCompte()}"
+					<p:commandButton value="Afficher" action="#{transactionBean.searchCompte()}"
 						update="soldeC,CodeC,agenceC,autorisationC" />
 				</p:panelGrid>
 				<p:outputLabel></p:outputLabel>
 				<p:panelGrid columns="2" cellpadding="10">
 					<p:outputLabel value="Num Compte" />
-					<p:inputText id="CodeC" value="#{clientBean.compte.codeCompte}" readonly="true" />
+					<p:inputText id="CodeC" value="#{transactionBean.compte.codeCompte}" readonly="true" />
 					<p:outputLabel value=" Solde Compte " />
-					<p:inputText id="soldeC" value="#{clientBean.solde}" readonly="true" />
+					<p:inputText id="soldeC" value="#{transactionBean.solde}" readonly="true" />
 					<p:outputLabel value=" Agence " />
-					<p:inputText id="agenceC" value="#{clientBean.compte.agence.libelle_Agence}" readonly="true" />
+					<p:inputText id="agenceC" value="#{transactionBean.compte.agence.libelle_Agence}" readonly="true" />
 					<p:outputLabel value=" Autorisation " />
-					<p:inputText id="autorisationC" value="#{clientBean.compte.autorisation}" readonly="true" />
+					<p:inputText id="autorisationC" value="#{transactionBean.compte.autorisation}" readonly="true" />
 				</p:panelGrid>
 				</p:fieldset>
 			</p:panelGrid>
@@ -113,45 +119,45 @@
 				
 				<!-- beneficiaire --> 
 				<p:panelGrid id="panelbeneficiaire" columns="2" style="font-size:18px;"
-					rendered="#{clientBean.radioValue=='btk'}">
+					rendered="#{transactionBean.radioValue=='btk'}">
 					<p:fieldset legend="Client 2"  style="width:500px">
 				
 					<p:outputLabel value="NID " />
 					<p:separator/>
 				<p:panelGrid id="panelbeneficiaireComptes" columns="2" cellpadding="10">
 				
-					<p:inputText value="#{clientBean.clientBeneficiaire.NID}" required="true" requiredMessage="veuillez inserer cin">
-						<pe:keyFilter regEx="/[0-9]/i" />
+					<p:inputText value="#{transactionBean.clientBeneficiaire.NID}" required="true" requiredMessage="veuillez inserer cin">
+					
 					</p:inputText>
 				
 				
-				<p:commandButton value="Valider" action="#{clientBean.findBeneficiaireByCIN()}"
+				<p:commandButton value="Valider" action="#{transactionBean.findBeneficiaireByCIN()}"
 					update="listbeneficiaire,code_Beneficiaire,panelbeneficiaire" />
 					
 				
 					<p:outputLabel value="Code" />
-					<p:inputText id="code_Beneficiaire" value="#{clientBean.codeBeneficiaire}" readonly="true" />
+					<p:inputText id="code_Beneficiaire" value="#{transactionBean.codeBeneficiaire}" readonly="true" />
 					<p:outputLabel value=" Liste des comptes "></p:outputLabel>
-					<p:selectOneMenu id="listbeneficiaire" value="#{clientBean.numCompteBeneficiaire}">
+					<p:selectOneMenu id="listbeneficiaire" value="#{transactionBean.numCompteBeneficiaire}">
 					<f:selectItem itemLabel="Select..." noSelectionOption="true" />
-					<f:selectItems value="#{clientBean.listeComptesBeneficiaire}"
+					<f:selectItems value="#{transactionBean.listeComptesBeneficiaire}"
 							var="item" itemLabel="#{item.type_compte}"
 							itemValue="#{item.codeCompte}">
 					</f:selectItems>
 					</p:selectOneMenu>
-					<p:commandButton value="Afficher" action="#{clientBean.searchCompteBeneficiaire()}"
+					<p:commandButton value="Afficher" action="#{transactionBean.searchCompteBeneficiaire()}"
 						update="soldeB,CodeB,agenceB,autorisationB" />
 				</p:panelGrid>
 				<p:outputLabel></p:outputLabel>
 				<p:panelGrid columns="2" cellpadding="10">
 					<p:outputLabel value="Num Compte" />
-					<p:inputText id="CodeB" value="#{clientBean.compteBeneficiaire.codeCompte}" readonly="true" />
+					<p:inputText id="CodeB" value="#{transactionBean.compteBeneficiaire.codeCompte}" readonly="true" />
 					<p:outputLabel value=" Solde Compte " />
-					<p:inputText id="soldeB" value="#{clientBean.soldeBeneficiaire}" readonly="true" />
+					<p:inputText id="soldeB" value="#{transactionBean.soldeBeneficiaire}" readonly="true" />
 					<p:outputLabel value=" Agence " />
-					<p:inputText id="agenceB" value="#{clientBean.compteBeneficiaire.agence.libelle_Agence}" readonly="true" />
+					<p:inputText id="agenceB" value="#{transactionBean.compteBeneficiaire.agence.libelle_Agence}" readonly="true" />
 					<p:outputLabel value=" Autorisation " />
-					<p:inputText id="autorisationB" value="#{clientBean.compteBeneficiaire.autorisation}" readonly="true" />
+					<p:inputText id="autorisationB" value="#{transactionBean.compteBeneficiaire.autorisation}" readonly="true" />
 				</p:panelGrid>
 			</p:fieldset>
 			</p:panelGrid>
@@ -166,28 +172,28 @@
 	 <p:panelGrid  id="panelS" columns="2" style ="position:center;font-size:18px" >
 			
 			 <p:outputLabel   value="Numero Effet" />
-			 <p:inputText  value="#{clientBean.numEffet}" required="true"  requiredMessage="le numero effet doit etre contenir 14 chiffres"/>
+			 <p:inputText  value="#{transactionBean.numEffet}" required="true"  requiredMessage="le numero effet doit etre contenir 14 chiffres"/>
 			 
 				 
 			 <p:outputLabel  value=" Montant"/>
-			 <p:inputText  value="#{clientBean.montantVR}"  required="true" requiredMessage="veuillez inserer le montant">
+			 <p:inputText  value="#{transactionBean.montantVR}"  required="true" requiredMessage="veuillez inserer le montant">
 			 <pe:keyFilter regEx="/[0-9]/i"/> 
 			 </p:inputText>
 			 
 			 <p:outputLabel   value="Motif" />
-			 <p:inputTextarea  value="#{clientBean.motif}" />
+			 <p:inputTextarea  value="#{transactionBean.motif}" />
 			 
 			<p:outputLabel value=" Choisir Client:"/>
 			
 				
-				<p:selectOneRadio id="console" value="#{clientBean.radioValue}" onclick="this.form.submit()">
+				<p:selectOneRadio id="console" value="#{transactionBean.radioValue}" onclick="this.form.submit()">
 		            <f:selectItem itemLabel="Autre Banque" itemValue="autre_banque" />
 		         	<f:selectItem itemLabel="btk" itemValue="btk" />
 		        </p:selectOneRadio>
 			</p:panelGrid>	
-			<p:panelGrid columns="2" rendered="#{clientBean.radioValue=='autre_banque'}">
+			<p:panelGrid columns="2" rendered="#{transactionBean.radioValue=='autre_banque'}">
 				<p:outputLabel value="RIB Beneficiaire" />
-				<p:inputText  value="#{clientBean.rib_Beneficiaire}" >
+				<p:inputText  value="#{transactionBean.rib_Beneficiaire}" >
 					<pe:keyFilter regEx="/[0-9]/i"/>
 				</p:inputText>
 			</p:panelGrid>
@@ -195,13 +201,13 @@
 	
 			
 			<center>
-				<p:commandButton value="Ajouter" action="#{clientBean.RemiseEffet()}" update="soldeC,soldeB" icon="ui-icon-check" />		    	
-		    	<p:commandButton value="Exit" icon="ui-icon-close" update="growl" action="#{authentificationBean.RetourMenu()}" />
+				<p:commandButton value="Ajouter" action="#{transactionBean.RemiseEffet()}" update="soldeC,soldeB,frm1" icon="ui-icon-check" />		    	
 			</center>
 		</center>
 			
-	</h:form>
+
 	</p:panel>
+		</h:form>
 </h:body> 
 </html>
 

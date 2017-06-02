@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import com.iset.secoursEJB.entities.Caisse;
 import com.iset.secoursEJB.entities.Client;
 @Entity
 public class Agence implements Serializable {
@@ -19,9 +18,6 @@ public class Agence implements Serializable {
 	private String libelle_Agence;
 	//relation client agence 
 	private List<Client> clients;
-	
-	//relation agence caisse
-	private List<Caisse> caisses;
 	
 	
 
@@ -49,13 +45,7 @@ public class Agence implements Serializable {
 		this.clients = clients;
 	}
 	
-	@OneToMany(mappedBy="agence")
-	public List<Caisse> getCaisses() {
-		return caisses;
-	}
-	public void setCaisses(List<Caisse> caisses) {
-		this.caisses = caisses;
-	}
+	
 
 	public String getLibelle_Agence() {
 		return libelle_Agence;

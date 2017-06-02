@@ -1,9 +1,11 @@
- package com.iset.secoursEJB.entities;
+package com.iset.secoursEJB.entities;
+
+
 
 import javax.persistence.Entity;
 
 @Entity
-public class Virement extends AutreOperation{
+public class VersementRetrait extends Operation{
 
 	/**
 	 * 
@@ -13,8 +15,5 @@ public class Virement extends AutreOperation{
 	
 	
 	
-	
-
 
 }
-

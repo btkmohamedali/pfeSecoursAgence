@@ -1,6 +1,7 @@
 package com.iset.ClientSecours.managedbean;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +21,16 @@ public class AgenceBean {
 	private Agence agence=new Agence();
 	
 	
+	public List<Agence> getListeAgences() {
+		listeAgences=daoAgence.findAll();
+		return listeAgences;
+	}
+
+	public void setListeAgences(List<Agence> listeAgences) {
+		this.listeAgences = listeAgences;
+	}
+
+	public List<Agence> listeAgences = new ArrayList<>();
 
 	
 

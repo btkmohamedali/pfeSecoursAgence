@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import com.iset.Connexion.ConnexionJDBC;
 import com.iset.Connexion.ConnexionORACLE;
 
@@ -12,29 +11,27 @@ public class Synchronisation {
 	ConnexionORACLE oracle=new ConnexionORACLE();
 	ConnexionJDBC mysql=new ConnexionJDBC();
 	
-	public void supprimerTables()
+	public void supprimerTables(String url) 
 	{
 		String nocheck="SET FOREIGN_KEY_CHECKS=0;";
 		String deleteagence="DELETE FROM agence;";
 		String check=" SET FOREIGN_KEY_CHECKS=1;";
 		String dropclient="DELETE FROM client";
 		String deleteevuti="DELETE FROM utilisateur";
-		String dropoperation="DELETE FROM operation";
 		String dropcaisse="DELETE FROM caisse";
 		String dropcompte="DELETE FROM compte";
 		//suppression de la table agence
-	  Statement statement;
+	  
 		try 
 		{
 			mysql.Connexion().setAutoCommit(false) ;
-			statement = mysql.Connexion().createStatement();
-			statement.addBatch(nocheck);
 			
+			Statement statement = mysql.Connexion().createStatement();
+			statement.addBatch(nocheck);
 			statement.addBatch(deleteagence);
 			statement.addBatch(deleteevuti);
-			statement.addBatch(dropclient);
-			statement.addBatch(dropoperation);
 			statement.addBatch(dropcaisse);
+			statement.addBatch(dropclient);
 			statement.addBatch(dropcompte);
 			statement.addBatch(check);
 			
@@ -48,7 +45,7 @@ public class Synchronisation {
 	    
 	}
 
-	public void synchroniserClient()
+	public void synchroniserClient(String url) 
 	{
 		try
 		{
@@ -85,50 +82,8 @@ public class Synchronisation {
 		
 	}
 	
-	public void nocheck() 
-	{
-		try 
-		{
-			System.out.println("SET foreign_key_checks = 0");
-			String contraintes="ALTER TABLE deltasecours.caisse DROP FOREIGN KEY code_agenceFK";
-			//suppression de la table caisse
-			
-		    Statement stcont= mysql.Connexion().createStatement();
-		    int row=stcont.executeUpdate(contraintes);
-		    System.out.println(row);
-		    if (row != 0) 
-		    {
-		        System.out.println(" contrainte desactivée!");
-		    }
-	    } 
-		catch (SQLException e) 
-		{
-			
-			e.printStackTrace();
-		}
-	}
 	
-	public void check() 
-	{
-		try 
-		{
-			System.out.println("SET foreign_key_checks = 1;");
-			String contraintes="SET foreign_key_checks = 1;";
-			//suppression de la table caisse
-			
-		    PreparedStatement stcont= mysql.Connexion().prepareStatement(contraintes);
-		    int row=stcont.executeUpdate();
-		    System.out.println(row);
-		    if (row > 0) 
-		    {
-		        System.out.println(" contrainte desactivée!");
-		    }
-	    } catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-	}
-	public void synchroniserAgence()
+	public void synchroniserAgence(String url)
 	{
 		try
 		{
@@ -157,13 +112,13 @@ public class Synchronisation {
 	    }
 	}
 
-	public void synchroniserEvuti()
+	public void synchroniserEvuti(String url)
 	{
 		try
 		{
 			System.out.println("afficher utilisateur");
 			String sqlexistance="select * from EVUTI";
-			String requeteinsert="INSERT INTO utilisateur (login,cin,mail,nomprenom,password,code_agenceFK) VALUES (?,?,?,?,?,?)";
+			String requeteinsert="INSERT INTO utilisateur (login,cin,mail,nomprenom,password,puti,code_agenceFK) VALUES (?,?,?,?,?,?,?)";
 			
 			Statement storacle=oracle.Connexion().createStatement();
 		    ResultSet rsselect=storacle.executeQuery(sqlexistance);
@@ -178,7 +133,9 @@ public class Synchronisation {
 		    	
 		    	stinsert.setString(5, rsselect.getString("MDP"));
 		    	
-		    	stinsert.setString(6, rsselect.getString("AGE"));
+		    	stinsert.setString(6, rsselect.getString("PUTI"));
+
+		    	stinsert.setString(7, rsselect.getString("AGE"));
 		    	int rowsAdded =stinsert.executeUpdate();
 		    	if (rowsAdded > 0) 
 			    {
@@ -199,7 +156,7 @@ public class Synchronisation {
 	    }
 	}
 		
-	public void synchroniserCaisse()
+	public void synchroniserCaisse(String url)
 	{
 		try
 		{
@@ -242,7 +199,7 @@ public class Synchronisation {
 	    }
 	}
 	
-	public void synchroniserCompte()
+	public void synchroniserCompte(String url) 
 	{
 		try
 		{
@@ -289,59 +246,7 @@ public class Synchronisation {
 	    }
 	}
 	
-	public void deleteDatabase()
-	{
-		String drop="drop database deltasecours";
-		//suppression de la table agence
-	    PreparedStatement statement ;
-		try 
-		{
-		
-		statement = mysql.Connexion().prepareStatement(drop);
-		int delete=statement.executeUpdate();
-		if(delete > 0)
-		{
-			System.out.println("database deleted");
-		}
-		
-		 
-		
-		} 
-		catch (SQLException e) 
-		{
-			
-			e.printStackTrace();
-		}
-	}
-	
-	public void createDatabase()
-	{
-		String drop="create database deltasecours";
-		//suppression de la table agence
-		PreparedStatement statement ;
-		try 
-		{
-			
-			statement = mysql.Connexion().prepareStatement(drop);
-			int delete=statement.executeUpdate();
-			if(delete > 0)
-			{
-				System.out.println("database created");
-			}
-			
-			 
-			
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
-		
-	}
-	
-	
-
-	public void updateAutorisation()
+	public void updateAutorisation(String url) 
 	{
 		try 
 		{
@@ -368,13 +273,115 @@ public class Synchronisation {
 				int x=stupdate.executeUpdate(updateauto);
 				System.out.println(x);
 			}
-			
-			
-		} catch (SQLException e) {
-			
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 			
 		}
+		
+	}
+
+	public void insertSynchro () 
+	{
+		//String count="SELECT COUNT(*) FROM SYNCHRONISATION";
+		String select="SELECT * FROM SYNCHRONISATION";
+		String x="";
+		try 
+		{
+			System.out.println("********************insert synchronisation***************************");
+			//calculer la taille de la table de synchro
+			/*Statement countSynchro=oracle.Connexion().createStatement();
+			
+			int rowsCount = countSynchro.executeUpdate(count);
+			if(rowsCount > 0)
+			{
+				System.out.println("count"+rowsCount);
+			}*/
+		
+			Statement st=oracle.Connexion().createStatement();
+			
+			ResultSet rs=st.executeQuery(select);
+			
+			while (rs.next())
+			{
+				System.out.println("*****************insertion synchrnisation*********");
+				String lib=rs.getString("LIBELLE_AGENCE");
+				String datasource_agence=rs.getString("DATASOURCE_AG");
+				 System.out.println(datasource_agence);
+				
+				//for(int i=0 ; i< rowsCount ; i++)
+				//{
+					/* Création de l'objet gérant la requête */
+					
+					try{
+						supprimerTables(datasource_agence);
+						synchroniserAgence(datasource_agence);
+						synchroniserEvuti(datasource_agence);
+						synchroniserCaisse(datasource_agence);
+						synchroniserClient(datasource_agence);
+						synchroniserCompte(datasource_agence);
+						updateAutorisation(datasource_agence);
+						x="synchronisation effectué avec succes";
+						System.out.println(x);
+					}
+					catch(Exception e)
+					{
+						x="synchronisation non effectué";
+						System.out.println(x);
+
+					}
+					
+			String update="UPDATE SYNCHRONISATION set ETAT='"+x+"' where LIBELLE_AGENCE='"+lib+"'";
+			System.out.println(update);
+			int rows=st.executeUpdate(update);
+			  	System.out.println(rows);
+				//}
+			  	
+		
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.getMessage();
+			e.printStackTrace();
+		} 
+		
+	}
+
+	
+	public void selectSynchronisation () 
+	{
+		//String count="SELECT COUNT(*) FROM SYNCHRONISATION";
+		String select="SELECT * FROM SYNCHRONISATION";
+		try 
+		{
+			//calculer la taille de la table de synchro
+			/*Statement countSynchro=oracle.Connexion().createStatement();
+			
+			int rowsCount = countSynchro.executeUpdate(count);
+			if(rowsCount > 0)
+			{
+				System.out.println("count"+rowsCount);
+			}*/
+			Statement stselect=oracle.Connexion().createStatement();
+			ResultSet rs=stselect.executeQuery(select);
+			System.out.println("before while");
+			while (rs.next())
+			{
+				System.out.println("after while");
+				System.out.println(rs.getString("LIBELLE_AGENCE"));
+				System.out.println(rs.getString("DATASOURCE_AG"));
+				System.out.println(rs.getString("ETAT"));
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.getMessage();
+			e.printStackTrace();
+		} 
 		
 	}
 }

@@ -9,12 +9,21 @@ import java.sql.SQLException;
 
 public class ConnexionORACLE {
 
-	 public Connection Connexion()
+	
+	 public Connection Connexion() 
 	 {
-		 System.out.println("-------- Oracle JDBC Connection Testing ------");
+		 
+		// Context ctx=new InitialContext();
+         
+
+          
+       //  return ((DataSource)ctx.lookup("java:jboss/datasources/deltaDS")).getConnection();
+		 
+		 
+		System.out.println("-------- Oracle JDBC Connection Testing ------");
 		 String url = "jdbc:oracle:thin:@localhost:1521:xe";
-	      String user = "delta";
-	      String password = "delta";
+	     String user = "delta";
+	     String password = "delta";
 	        try 
 	        {
 

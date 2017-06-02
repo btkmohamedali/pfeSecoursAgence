@@ -2,6 +2,7 @@ package com.iset.secoursEJB.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -9,7 +10,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
-import com.iset.secoursEJB.entities.Caisse;
 
 @Entity
 public class Utilisateur implements Serializable {
@@ -23,21 +23,15 @@ public class Utilisateur implements Serializable {
 	private String password;
 	@NotNull
 	private String nomprenom;
-	
 	@NotNull
-	private int cin;
-
+	private String puti;
 	private String mail;
 	
 	private Agence agence ;
 	
-	
-
-	//relation utilisateur caisse
 	private List<Caisse> caisses;
-	
-	private List<Operation> operations;
-	
+	private List<VersementRetrait> listeversementretraits;
+
 	@Id
 	@NotNull
 	public String getLogin() {
@@ -48,9 +42,7 @@ public class Utilisateur implements Serializable {
 		this.login = login;
 	}
 		
-	public int getCin() {
-		return cin;
-	}
+	
 
 	public String getPassword() {
 		return password;
@@ -60,7 +52,13 @@ public class Utilisateur implements Serializable {
 		this.password = password;
 	}
 
-	
+	public String getPuti() {
+		return puti;
+	}
+
+	public void setPuti(String puti) {
+		this.puti = puti;
+	}
 
 	
 
@@ -72,27 +70,9 @@ public class Utilisateur implements Serializable {
 		this.nomprenom = nomprenom;
 	}
 
-	public void setCin(int cin) {
-		this.cin = cin;
-	}
+	
+	
 
-	@OneToMany(mappedBy="utilisateur")
-	public List<Caisse> getCaisses() {
-		return caisses;
-	}
-
-	public void setCaisses(List<Caisse> caisses) {
-		this.caisses = caisses;
-	}
-
-	@OneToMany(mappedBy="utilisateur")
-	public List<Operation> getOperations() {
-		return operations;
-	}
-
-	public void setOperations(List<Operation> operations) {
-		this.operations = operations;
-	}
 	
 	
 	public String getMail() {
@@ -112,6 +92,8 @@ public class Utilisateur implements Serializable {
 	public void setAgence(Agence agence) {
 		this.agence = agence;
 	}
+
+	
 		
 	
 	

@@ -5,55 +5,26 @@
       xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"> 
 
 <h:head>
-	<title> Menu </title>
+	<title> Liste des mot de passe </title>
 </h:head>
  
 <h:body>
  <p:growl id="growl" sticky="true" showDetail="true"/>
-	
-	  <h:form>
-		    <p:menubar>
-		       
-		        
-		         <p:submenu label="Operation" icon="ui-icon-document">
-		         	<p:submenu label="choisir operation" icon="ui-icon-contact">
-				          <p:menuitem id="VersementRetrait" value="Versement/Retrait" url="VersementRetrait.xhtml"  />
-				          <p:menuitem id="ChequeOperation" value="Operation cheque" url="RemiseCheque.xhtml" />
-				          <p:menuitem id="Remise_Effet" value="Remise Effet" url="RemiseEffet.xhtml" />
-				          <p:menuitem id="Virement" value="Virement" url="Virement.xhtml" />
-				    </p:submenu>
-				     
-		         	<p:submenu label="Lists" icon="ui-icon-contact">
-		         		 <p:menuitem id="List_Agence" value="List Agence" url="ListAgence.xhtml"  />
-				          <p:menuitem id="List_Comptes" value="List Compte" url="ListCompte.xhtml"  />
-				          <p:menuitem id="Liste_Clients" value="List Client" url="ListClient.xhtml" />
-				         
-				    </p:submenu>
-		          	<p:submenu label="Lists des operations" icon="ui-icon-contact" >
-							 <p:menuitem id="Liste_Retrait" value="List Retrait" url="ListRetrait.xhtml" />
-							 <p:menuitem id="Liste_Versement" value="List Versement" url="ListVersement.xhtml" />
-							 <p:menuitem id="Liste_Virement" value="List Virement" url="ListVirement.xhtml" />
-							 <p:menuitem id="Liste_RC" value="List Remise Cheque" url="ListRemiseCheque.xhtml" />
-							 <p:menuitem id="Liste_RE" value="List Remise Effet" url="ListRemiseEffet.xhtml" />
-					</p:submenu>
-		          	<p:submenu>
-		          		 <p:menuitem id="synchro" value="synchronisation" url="AffichageMotdepasse.xhtml" />
-		          	</p:submenu>
-		          <p:separator />
-		          <p:menuitem value="Quit" url="Authentification.xhtml" />
-		        </p:submenu>
-		 		
-		 		<f:facet name="options">
-		           <p:outputLabel style="margin-right:20px" value="#{authentificationBean.user.login}"  icon="ui-icon-home" />
-		           <p:commandButton  value="Logout"  icon="ui-icon-home" action="#{authentificationBean.sortir()}" />
-		        </f:facet>
-		    </p:menubar>
-	  </h:form>
-	 
-	  	<p:panel id="title">
-	<h2> Liste utilisateurs  </h2>
-	
-	<p:dataTable var="utilisateur" id="dataTable" value="#{authentificationBean.findAll()}" border="2">
+	<h:form id="title"> 
+	<p:panel>
+	<center>
+		<p:fieldset legend=" Choisir agence " style="width:50px">
+			<p:selectOneMenu id="listClient" value="#{authentificationBean.code_agence}" effect="fold">
+				<p:ajax event="change" update="userstable" listener="#{authentificationBean.findUserByCodeAgence}"/>
+				<f:selectItem itemLabel="Select..." noSelectionOption="true" />
+				<f:selectItems value="#{agenceBean.listeAgences}" 
+					var="item" itemLabel="#{item.libelle_Agence}" 
+					itemValue="#{item.codeAgence}">
+				</f:selectItems>
+			</p:selectOneMenu>
+			</p:fieldset>
+	</center>
+	<p:dataTable var="utilisateur" id="userstable" value="#{authentificationBean.listUsers}" border="2" style="margin-top:50px" >
 		<p:column>
 			<center>
 				<f:facet name="header">
@@ -83,10 +54,10 @@
 		
 		
 	</p:dataTable>
-	
-	  </p:panel>
+	</p:panel>
+	</h:form>
 	  <center>
-		<p:commandButton value="Print" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+		<p:commandButton value="Imprimer" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
     		<p:printer target="title" />
 		</p:commandButton>
 	</center>

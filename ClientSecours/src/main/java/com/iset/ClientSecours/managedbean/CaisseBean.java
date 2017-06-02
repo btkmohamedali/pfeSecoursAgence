@@ -21,9 +21,12 @@ public class CaisseBean {
 	
 	String loginFromSession = (String)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("login");
 	
-	private List<Caisse> listeCaisses=new ArrayList<Caisse>();
-
+	
+	public List<Caisse> listeCaisses = new ArrayList<>();
+	
 	public List<Caisse> getListeCaisses() {
+		System.out.println("login from session"+loginFromSession);
+		listeCaisses=daoCaisse.findListCaisseByLogin(loginFromSession);
 		return listeCaisses;
 	}
 

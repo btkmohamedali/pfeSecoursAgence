@@ -1,19 +1,19 @@
 package com.iset.Test;
 
+import javax.naming.NamingException;
+
 import com.iset.Methodes.Synchronisation;
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NamingException {
 		Synchronisation oracle=new Synchronisation();
-			
-		oracle.supprimerTables();
-		oracle.synchroniserAgence();
-		oracle.synchroniserEvuti();
-		oracle.synchroniserCaisse();
-		oracle.synchroniserClient();
-		oracle.synchroniserCompte();
-		oracle.updateAutorisation();
+		String url= "jdbc:mysql://localhost:3306/deltasecours?autoReconnect=true&useSSL=false";
+		
+		oracle.insertSynchro();
+		
+		
+		//oracle.selectSynchronisation();
 	}
 
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.Integer;
 import java.lang.String;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,8 +16,7 @@ import com.iset.secoursEJB.entities.Compte;
  *
  */
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="libelle_operation" , discriminatorType=DiscriminatorType.STRING)
+@Inheritance(strategy=InheritanceType.JOINED)
 public class Operation implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -32,7 +33,7 @@ public class Operation implements Serializable {
 	@NotNull
 	private Compte compte;
 	
-	private Utilisateur utilisateur;
+	
 	
 	private Client client;
 	@Id
@@ -74,14 +75,7 @@ public class Operation implements Serializable {
 		this.compte = compte;
 	}
 	
-	@ManyToOne
-	@JoinColumn(name="code_utilisateurFK")
-	public Utilisateur getUtilisateur() {
-		return utilisateur;
-	}
-	public void setUtilisateur(Utilisateur utilisateur) {
-		this.utilisateur = utilisateur;
-	}
+	
 	
 	@ManyToOne
 	@JoinColumn(name="code_clientFK")
@@ -91,5 +85,14 @@ public class Operation implements Serializable {
 	public void setClient(Client client) {
 		this.client = client;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
