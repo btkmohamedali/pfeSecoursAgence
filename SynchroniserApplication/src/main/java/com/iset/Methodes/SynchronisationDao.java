@@ -132,6 +132,7 @@ public class SynchronisationDao {
 	{
 		try
 		{
+			System.out.println("afficher agence");
 			String sqlexistance="select * from BKAGE";
 			/* Création de l'objet gérant les requêtes */
 			Statement storacle=oracle.Connexion().createStatement();
@@ -194,6 +195,7 @@ public class SynchronisationDao {
 	{
 		try
 		{
+			System.out.println("afficher caisse");
 			String sqlexistance="select * from BKCAI";
 			String requeteinsert="INSERT INTO caisse(numerocaisse,soldeCaisse,code_agenceFK,code_operationFK,code_utilisateurFK) VALUES (?,?,?,?,?)";
 			 
@@ -329,9 +331,10 @@ public class SynchronisationDao {
 	}
 	public void synchronnisationBase ()
 	{
-		String count="SELECT COUNT(*) AS count FROM synchronisation ";
+		//String count="SELECT COUNT(*) AS count FROM synchronisation ";
 		String select="SELECT * FROM SYNCHRONISATION";
 		String x="";
+		
 		try 
 		{
 			
